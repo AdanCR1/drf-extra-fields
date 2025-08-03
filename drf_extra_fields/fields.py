@@ -316,3 +316,21 @@ class LowercaseEmailField(EmailField):
     def to_representation(self, value):
         value = super().to_representation(value)
         return value.lower()
+
+
+class BaseQRCodeField(ImageField):
+    def to_representation(self, value):
+        if not value:
+            return None
+        try:
+            import qrcode
+        except ImportError:
+            raise ImportError("qrcode library is required. Please install it using 'pip install qrcode'.")
+
+        qr_image = qrcode.make(value)
+
+        buffer = io.BytesIO()
+        qr_image.save(buffer, format='PNG')
+
+        encoded_image = base64.b64encode(buffer.getvalue()).decode()
+        return f"data:image/png;base64,{encoded_image}"
