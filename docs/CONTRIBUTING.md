@@ -1,6 +1,6 @@
 # Guía Técnica para Contribuir en drf-extra-fields
 
-Este documento explica como clonar el repositorio, configurar el entorno de desarrollo, ejecutar pruebas y realizar Pull Requests.
+Este documento explica desde hacer un fork, cómo clonar el repositorio, ramas, configurar el entorno de desarrollo, ejecutar pruebas y realizar Pull Requests.
 Sigue estos pasos para que tu contribución sea sencilla, efectiva y alineada con las buenas prácticas del proyecto.
 ---
 ## 1. Crear y clonar el Fork 
@@ -25,11 +25,73 @@ cd drf-extra-fields
 
 ## 3 Crea una rama de trabajo de acuerdo a tu FUNCIONALIDAD PRINCIPAL 
 
-Para crear y mover una rama ejecuta el siguiente comando:
+Cada integrante del equipo debe crear una rama de trabajo basada en la funcionalidad que le corresponde, por lo que se les asignara un nombre de rama específico que refleje su tarea.
+Busquen sus nombres y ejecuten el comando designado para crear su rama de trabajo en el que realizarán sus contribuciones:
+
+- Grupo B - CAMPOS ESPECIALIZADOS
+
+Rama para Mary Villca:
+```bash
+git checkout -b feature/urlqr/implement
+```
+
+Rama para Jorge Choque:
+```bash
+git checkout -b feature/wifiqr/implement
+```
+
+Rama para Celso Velasco:
+```bash
+git checkout -b feature/vcardqr/implement
+```
+
+- Grupo C - TESTING AUTOMATIZADO
+
+Rama para Gerardo Burgos:
+```bash
+git checkout -b test/baseqr/unit
+```
+
+Rama para Rommel Valda:
+```bash
+git checkout -b test/urlqr/unit
+```
+
+Rama para Carlos Marcelo:
+```bash
+git checkout -b test/wifiqr/unit
+```
+
+Rama para Jhony Quispe: 'test/vcardqr/unit'
+```bash
+git checkout -b test/vcardqr/unit
+```
+
+- Grupo D - DOCUMENTACIÓN Y REVISIÓN
+
+Rama para Jhon Escobar:
+```bash
+git checkout -b docs/redaction/review
+```
+
+Rama para Clemente Isla:
+```bash
+git checkout -b docs/integration-drf/examples
+```
+
+Rama para Kevin Navia:
+```bash
+git checkout -b docs/pull-request/write
+```
+
+luego de crear y cambiar de rama ejecuta este comando para agregar el repositorio original como remoto:
 
 ```bash
-git checkout -b docs/guia-tecnica
+git remote add upstream https://github.com/AdanCR1/drf-extra-fields.git
 ```
+
+Es importante que ejecuten ese comando en su rama de trabajo y no en la rama master, ya que la rama master debe permanecer limpia y sin modificaciones directas.
+
 ## 4 Ejecutar las  pruebas con tox
 
 Para automatizar las pruebas y asegurar la calidad del código, debes usar los siguientes comandos:
@@ -42,7 +104,11 @@ pip install tox
 tox
 ```
 
+Haz los cambios que te correspondan en tu rama de trabajo. Luego, ejecuta 'git add .' para agregar los cambios y 'git commit -m "mensaje descriptivo"' para confirmar los cambios, posteriormente ya estará listo para solicitar el Pull Request.
+
 ## 5 Pull Request(PR)
+
+Si estás seguro de que tu rama de trabajo está lista para ser revisada, sigue estos pasos:
 
 - Crea el Pull Request
 
@@ -70,40 +136,6 @@ Por último, has clic en **'Create Pull Request'**, esto para que Adan revise tu
 
 ![imagendeFork](IMAGES/CapturaD.png)
 
-## 6 Consejos y buenas practicas
-
-* **Nombres de archivos:** Utiliza los siguientes nombres de Rama para mantener el orden:
-
-- Grupo B - CAMPOS ESPECIALIZADOS
-
-Rama para Mary Villca: 'feature/urlqr/implement'
-
-Rama para Jorge Choque Ferrufino: 'feature/wifiqr/implement'
-
-Rama para Celso Velasco: 'feature/vcardqr/implement'
-
-- Grupo C - TESTING AUTOMATIZADO
-
-Rama para Gerardo Burgos: 'test/baseqr/unit'
-
-Nombre de archivo: 'test_base_qr_code_field.py'
-
-Rama para Rommel Valda: 'test/urlqr/unit'
-
-Rama para Carlos Marcelo: 'test/wifiqr/unit'
-
-Rama para Jhony Quispe: 'test/vcardqr/unit'
-
-- Grupo D - DOCUMENTACIÓN Y REVISIÓN
-
-Rama para Jhon Escobar, Clemente Isla y Kevin Navia:
-
-'docs/integration-drf/examples' y 'docs/pull-request/write'
-
-
-
-
-
-
-
-
+### Notas:
+- Asegúrate de estar en el repositorio correcto (AdanCR1/drf-extra-fields) al crear el Pull Request y no en tu fork.
+- Asegúrate de que tu Pull Request sea claro y conciso, describiendo los cambios realizados y su propósito.
