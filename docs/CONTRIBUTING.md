@@ -84,13 +84,14 @@ Rama para Kevin Navia:
 git checkout -b docs/pull-request/write
 ```
 
-luego de crear y cambiar de rama ejecuta este comando para agregar el repositorio original como remoto:
+----
+### Luego de crear y cambiar de rama ejecuta este comando para agregar el repositorio original como remoto:
 
 ```bash
 git remote add upstream https://github.com/AdanCR1/drf-extra-fields.git
 ```
-
 Es importante que ejecuten ese comando en su rama de trabajo y no en la rama master, ya que la rama master debe permanecer limpia y sin modificaciones directas.
+----
 
 ## 4 Ejecutar las  pruebas con tox
 
