@@ -5,7 +5,7 @@ Sigue estos pasos para que tu contribución sea sencilla, efectiva y alineada co
 ---
 ## 1. Crear y clonar el Fork 
 
-*Este paso es muy importante para la contribucion.*
+**Este paso es muy importante para la contribucion.**
 
 Ingresa a la pagina de git de AdanCR1, dirijete al proyecto drf-extra-fields (link de referencia https://github.com/AdanCR1/drf-extra-fields) y dale clic en Fork para que se cree el nuevo enlace para tu repositorio.
 
@@ -30,54 +30,77 @@ Para crear y mover una rama ejecuta el siguiente comando:
 ```bash
 git checkout -b docs/guia-tecnica
 ```
+## 4 Ejecutar las  pruebas con tox
 
-## 4 Pull Request
+Para automatizar las pruebas y asegurar la calidad del código, debes usar los siguientes comandos:
 
-Desde GitHub de AdanCR1, abre Pull Request (Enlace https://github.com/AdanCR1/drf-extra-fields/pulls), luego dale clic en 'New Pull Requests', en la opcion 'compare:Master' debes seleccionar el nombre de tu Rama.
+```bash
+pip install tox
+```
 
-En la opcion de base Master ahi esta en lo que vamos a trabajar
+```bash
+tox
+```
 
-En base repositorio hipo debes seleccionar el repositorio de Adan 
+## 5 Pull Request(PR)
 
-Create Pull Request es para solicitar a Adan para que nos de un checkout
+- Crea el Pull Request
 
+Desde GitHub de AdanCR1, abre Pull Request (Enlace https://github.com/AdanCR1/drf-extra-fields/pulls), luego dale clic en 'New Pull Requests'.
 
+![imagendeFork](IMAGES/CapturaPullrequests1.png)
 
+![imagendeFork](IMAGES/CapturaNewPR2.png)
 
-## 5 Consejos y buenas practicas
+- Iniciar Pull Request
+
+En la opción **'base'**, asegúrate de que esté seleccionado master.
+
+![imagendeFork](IMAGES/CapturaC.png)
+
+En la opción **'compare'** debes seleccionar el nombre de tu Rama, , por ejemplo: docs/guia-tecnica.
+
+![imagendeFork](IMAGES/CapturaA.png)
+
+En la opción **'base repository'**, debe estar seleccionado el repositorio de 'AdanCR1'.
+
+![imagendeFork](IMAGES/CapturaB.png)
+
+Por último, has clic en **'Create Pull Request'**, esto para que Adan revise tu contribución y nos de un checkout.
+
+![imagendeFork](IMAGES/CapturaD.png)
+
+## 6 Consejos y buenas practicas
 
 * **Nombres de archivos:** Utiliza los siguientes nombres de Rama para mantener el orden:
 
 - Grupo B - CAMPOS ESPECIALIZADOS
 
-Rama para Mary Villca: feature/urlqr/implement
+Rama para Mary Villca: 'feature/urlqr/implement'
 
-Rama para Jorge Choque Ferrufino: feature/wifiqr/implement
+Rama para Jorge Choque Ferrufino: 'feature/wifiqr/implement'
 
-Rama para Celso Velasco: feature/vcardqr/implement
+Rama para Celso Velasco: 'feature/vcardqr/implement'
 
 - Grupo C - TESTING AUTOMATIZADO
 
-Rama para Gerardo Burgos:test/baseqr/unit.
+Rama para Gerardo Burgos: 'test/baseqr/unit'
 
-Nombre de archivo: test_base_qr_code_field.py.
+Nombre de archivo: 'test_base_qr_code_field.py'
 
-Rama para Rommel Valda: test/urlqr/unit
+Rama para Rommel Valda: 'test/urlqr/unit'
 
-Rama para Carlos Marcelo: test/wifiqr/unit
+Rama para Carlos Marcelo: 'test/wifiqr/unit'
 
-Rama para Jhony Quispe: test/vcardqr/unit
+Rama para Jhony Quispe: 'test/vcardqr/unit'
 
 - Grupo D - DOCUMENTACIÓN Y REVISIÓN
 
-Rama para Jhon Escobar, Clemente Isla y Kevin Navia
+Rama para Jhon Escobar, Clemente Isla y Kevin Navia:
 
-docs/integration-drf/examples
-docs/pull-request/write
+'docs/integration-drf/examples' y 'docs/pull-request/write'
 
-* **Mensajes de commit:** Los mensajes de `commit` deben ser cortos donde expliquen el propósito de tus cambios.
-* **Capturas de pantalla imagen:** Deben ir en la carpeta `IMAGES`
-* **PRs:** Proporciona una descripción detallada en tu `Pull Request` para que los revisores entiendan qué has hecho.
+
 
 
 
