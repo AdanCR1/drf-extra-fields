@@ -3,3 +3,4 @@ pytest-django
 pytest-cov
 flake8
 qrcode
+pytz
