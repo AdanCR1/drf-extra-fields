@@ -1,13 +1,14 @@
-# Guía Técnica para Contribuir en al proyecto drf-extra-fields
+# Guía Técnica para Contribuir en el proyecto drf-extra-fields
 
 Este documento explica desde cómo clonar el repositorio, crear ramas, configurar el entorno de desarrollo, ejecutar pruebas y realizar Pull Requests.
 Sigue estos pasos para que tu contribución sea sencilla, efectiva y alineada con las buenas prácticas del proyecto.
 ---
-## 1. Clonar el repositorio
+## 1. Clonar el repositorio(Fork de AdanCr1)
 
 **Este paso es muy importante para la contribución.**
 
-Ingresa a la pagina de git de AdanCR1, dirijete a la carpeta del proyecto drf-extra-fields (link de referencia https://github.com/AdanCR1/drf-extra-fields) y dale clic en 'Code' para copiar el enlace del repositorio.
+Todos debemos trabajar directamente sobre el fork de AdanCR1, no debes crear tu propio fork.
+Ingresa a la pagina de git de AdanCR1, dirígete a la carpeta del proyecto drf-extra-fields (link de referencia https://github.com/AdanCR1/drf-extra-fields) y dale clic en 'Code' para copiar el enlace del repositorio.
 
 ![imagendeFork](IMAGES/Captura1enlace.png)
 
@@ -18,7 +19,7 @@ git clone https://github.com/AdanCR1/drf-extra-fields.git
 ```
 ## 2 Ingresa al directorio del proyecto
 
-Ingresa a la carpeta del proyecto para comenzar a trabajar dentro de ella con el siguiente comando.
+Ingresa al directorio del proyecto para comenzar a trabajar dentro de ella con el siguiente comando.
 
 ```bash
 cd drf-extra-fields
@@ -114,7 +115,7 @@ git checkout -b docs/pull-request/write
 
 ----
 
-Haz los cambios que te correspondan en tu rama de trabajo. Luego, ejecuta 'git add .' para agregar los cambios y 'git commit -m "mensaje descriptivo"' para confirmar los cambios y git push origin nombre de tu rama, para posteriormente solicitar el Pull Request.
+Haz los cambios que te correspondan en tu rama de trabajo. Luego, ejecuta en la terminal: 'git add .' para agregar los cambios, 'git commit -m "mensaje descriptivo"' para confirmar los cambios y 'git push origin nombre de tu rama', para posteriormente solicitar el Pull Request.
 
 ![imagendeFork](IMAGES/CapturaGadd.png)
 
@@ -185,6 +186,13 @@ Por último dale clic en el botón y redacta el Pull Request, por ejemplo: docs/
 
 ![imagendeFork](IMAGES/CapturaD.png)
 
+**Manten tu rama actualizada**
+
+Puedes actualizar tu copia local con:
+
+```bash
+git pull origin maestro
+```
 ### Notas:
 - Asegúrate de estar en el repositorio correcto (AdanCR1/drf-extra-fields) al crear el Pull Request.
 - Asegúrate de que tu Pull Request sea claro y conciso, describiendo los cambios realizados y su propósito.
