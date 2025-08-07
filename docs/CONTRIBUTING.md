@@ -130,8 +130,8 @@ pip install tox
 ```bash
 tox
 ```
-**Probar tu código de forma manuel**
-Puedes crear una archivo temporal para pobrar tu código, sin tener la necesidad de instalar librerías.
+**Probar tu código de forma manual**
+Puedes crear una archivo temporal para probar tu código, sin tener la necesidad de instalar librerías.
 
 **Ejemplo de uso**
 a).- Asegúrate de estar en el entorno virtual y activalo.
