@@ -1,13 +1,13 @@
-# Guía Técnica para Contribuir en drf-extra-fields
+# Guía Técnica para Contribuir en al proyecto drf-extra-fields
 
-Este documento explica desde cómo clonar el repositorio, ramas, configurar el entorno de desarrollo, ejecutar pruebas y realizar Pull Requests.
+Este documento explica desde cómo clonar el repositorio, crear ramas, configurar el entorno de desarrollo, ejecutar pruebas y realizar Pull Requests.
 Sigue estos pasos para que tu contribución sea sencilla, efectiva y alineada con las buenas prácticas del proyecto.
 ---
 ## 1. Clonar el repositorio
 
-**Este paso es muy importante para la contribucion.**
+**Este paso es muy importante para la contribución.**
 
-Ingresa a la pagina de git de AdanCR1, dirijete al proyecto drf-extra-fields (link de referencia https://github.com/AdanCR1/drf-extra-fields) y dale clic en 'Code' para copiar el enlace del repositorio.
+Ingresa a la pagina de git de AdanCR1, dirijete a la carpeta del proyecto drf-extra-fields (link de referencia https://github.com/AdanCR1/drf-extra-fields) y dale clic en 'Code' para copiar el enlace del repositorio.
 
 ![imagendeFork](IMAGES/Captura1enlace.png)
 
@@ -53,7 +53,7 @@ pip install -r requirements.txt
 
 ## 5. Crea una rama de trabajo de acuerdo a tu FUNCIONALIDAD PRINCIPAL 
 
-Cada integrante del equipo debe crear una rama de trabajo basada en la funcionalidad que le corresponde, por lo que se les asignara un nombre de rama específico que refleje su tarea.
+Cada integrante del equipo debe crear una rama de trabajo basada en la funcionalidad que le corresponde, por lo que se les asignará un nombre de rama específico que refleje su tarea.
 Busquen sus nombres y ejecuten el comando designado para crear su rama de trabajo en el que realizarán sus contribuciones:
 
 - Grupo B - CAMPOS ESPECIALIZADOS
@@ -116,8 +116,11 @@ git checkout -b docs/pull-request/write
 
 Haz los cambios que te correspondan en tu rama de trabajo. Luego, ejecuta 'git add .' para agregar los cambios y 'git commit -m "mensaje descriptivo"' para confirmar los cambios y git push origin nombre de tu rama, para posteriormente solicitar el Pull Request.
 
-## 4. Ejecutar las  pruebas con tox
+![imagendeFork](IMAGES/CapturaGadd.png)
 
+## 4. Ejecutar y probar tu código localmente
+
+**Ejecutar pruebas con tox**
 Para automatizar las pruebas y asegurar la calidad del código, debes usar los siguientes comandos:
 
 ```bash
@@ -127,8 +130,38 @@ pip install tox
 ```bash
 tox
 ```
+**Probar tu código de forma manuel**
+Puedes crear una archivo temporal para pobrar tu código, sin tener la necesidad de instalar librerías.
 
-Si las prueban fallan, areglalo y vuelve a ejectutar hasta que pase.
+**Ejemplo de uso**
+a).- Asegúrate de estar en el entorno virtual y activalo.
+b).- Desde la raíz del proyecto (drf-extra-fields), crea un archivo nuevo llamado probar_urlqr.py.
+
+```bash
+probar_urlqr.py
+```
+c).- Abre el archivo 'probar_urlqr.py' y dentro agrega el siguiente código:
+
+```bash
+from drf_extra_fields.fields.url_qr_field import URLQRField
+```
+```bash
+campo = URLQRField()
+```
+```bash
+valor = campo.to_representation("https://github.com/AdanCR1")
+```
+```bash
+print("Resultado del campo URLQRField:")
+print(valor)
+```
+d).- Desde la terminal, asegurate de estar en la carpet raíz del proyecto donde esta 'probar_urlqr.py' y ejecuta:
+
+```bash
+python probar_urlqr.py
+```
+
+Si las pruebas fallan, arréglalas y vuelve a ejecutar el comanado hasta que pasen todas correctamente.
 
 ## 5. Pull Request(PR)
 
@@ -142,7 +175,7 @@ Desde GitHub de AdanCR1, abre Pull Request (Enlace https://github.com/AdanCR1/dr
 
 ![imagendeFork](IMAGES/CapturaPR2.png)
 
-- Crea o modifica el Pull Request
+- Crea o modifica tu rama con el Pull Request
 
 GitHub detectará automáticamente que has subido una nueva rama ó realizaste algún cambio y mostrará un botón que dice **'New pull request'** ó **'Compare pull request'**.
 
@@ -153,5 +186,5 @@ Por último dale clic en el botón y redacta el Pull Request, por ejemplo: docs/
 ![imagendeFork](IMAGES/CapturaD.png)
 
 ### Notas:
-- Asegúrate de estar en el repositorio correcto (AdanCR1/drf-extra-fields) al crear el Pull Request y no en tu fork.
+- Asegúrate de estar en el repositorio correcto (AdanCR1/drf-extra-fields) al crear el Pull Request.
 - Asegúrate de que tu Pull Request sea claro y conciso, describiendo los cambios realizados y su propósito.
