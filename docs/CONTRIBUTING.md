@@ -1,9 +1,10 @@
+
 # Guía Técnica para Contribuir en el proyecto drf-extra-fields
 
 Este documento explica desde cómo clonar el repositorio, crear ramas, configurar el entorno de desarrollo, ejecutar pruebas y realizar Pull Requests.
 Sigue estos pasos para que tu contribución sea sencilla, efectiva y alineada con las buenas prácticas del proyecto.
 ---
-## 1. Clonar el repositorio(Fork de AdanCr1)
+## 1. Clonar el repositorio (Fork de AdanCr1)
 
 **Este paso es muy importante para la contribución.**
 
@@ -17,15 +18,16 @@ Una vez copiado, crea una carpeta y dentro clona el Fork de Adan con el siguient
 ```bash
 git clone https://github.com/AdanCR1/drf-extra-fields.git
 ```
-## 2 Ingresa al directorio del proyecto
 
-Ingresa al directorio del proyecto para comenzar a trabajar dentro de ella con el siguiente comando.
+## 2. Ingresar al directorio del proyecto
+
+Ingresa al directorio del proyecto para comenzar a trabajar dentro de él con el siguiente comando:
 
 ```bash
 cd drf-extra-fields
 ```
 
-## 3 Crear y activar el entorno virtual para que aisle las dependencias del proyecto
+## 3. Crear y activar el entorno virtual para aislar las dependencias del proyecto
 
 Para crear:
 
@@ -46,153 +48,143 @@ Para activar:
   ```bash
   source venv/bin/activate
   ```
+
 ## 4. Instalar dependencias
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## 5. Crea una rama de trabajo de acuerdo a tu FUNCIONALIDAD PRINCIPAL 
+## 5. Crear una rama de trabajo según tu responsabilidad
 
-Cada integrante del equipo debe crear una rama de trabajo basada en la funcionalidad que le corresponde, por lo que se les asignará un nombre de rama específico que refleje su tarea.
-Busquen sus nombres y ejecuten el comando designado para crear su rama de trabajo en el que realizarán sus contribuciones:
+Cada integrante del equipo debe crear una rama basada en su funcionalidad asignada. Usa el comando correspondiente:
 
-- Grupo B - CAMPOS ESPECIALIZADOS
+### Grupo B - CAMPOS ESPECIALIZADOS
 
-Rama para Mary Villca:
+- **Mary Villca**  
 ```bash
 git checkout -b feature/urlqr/implement
 ```
 
-Rama para Jorge Choque:
+- **Jorge Choque**  
 ```bash
 git checkout -b feature/wifiqr/implement
 ```
 
-Rama para Celso Velasco:
+- **Celso Velasco**  
 ```bash
 git checkout -b feature/vcardqr/implement
 ```
 
-- Grupo C - TESTING AUTOMATIZADO
+### Grupo C - TESTING AUTOMATIZADO
 
-Rama para Gerardo Burgos:
+- **Gerardo Burgos**  
 ```bash
 git checkout -b test/baseqr/unit
 ```
 
-Rama para Rommel Valda:
+- **Rommel Valda**  
 ```bash
 git checkout -b test/urlqr/unit
 ```
 
-Rama para Carlos Marcelo:
+- **Carlos Marcelo**  
 ```bash
 git checkout -b test/wifiqr/unit
 ```
 
-Rama para Jhony Quispe: 'test/vcardqr/unit'
+- **Jhony Quispe**  
 ```bash
 git checkout -b test/vcardqr/unit
 ```
 
-- Grupo D - DOCUMENTACIÓN Y REVISIÓN
+### Grupo D - DOCUMENTACIÓN Y REVISIÓN
 
-Rama para Jhon Escobar:
+- **Jhon Escobar**  
 ```bash
 git checkout -b docs/redaction/review
 ```
 
-Rama para Clemente Isla:
+- **Clemente Isla**  
 ```bash
 git checkout -b docs/integration-drf/examples
 ```
 
-Rama para Kevin Navia:
+- **Kevin Navia**  
 ```bash
 git checkout -b docs/pull-request/write
 ```
 
-----
+Luego realiza tus cambios y usa los siguientes comandos:
 
-Haz los cambios que te correspondan en tu rama de trabajo. Luego, ejecuta en la terminal: 'git add .' para agregar los cambios, 'git commit -m "mensaje descriptivo"' para confirmar los cambios y 'git push origin nombre de tu rama', para posteriormente solicitar el Pull Request.
+```bash
+git add .
+git commit -m "mensaje descriptivo"
+git push origin nombre-de-tu-rama
+```
 
 ![imagendeFork](IMAGES/CapturaGadd.png)
 
-## 4. Ejecutar y probar tu código localmente
+## 6. Ejecutar y probar tu código localmente
 
-**Ejecutar pruebas con tox**
-Para automatizar las pruebas y asegurar la calidad del código, debes usar los siguientes comandos:
+### Ejecutar pruebas con tox
 
 ```bash
 pip install tox
-```
-
-```bash
 tox
 ```
-**Probar tu código de forma manual**
-Puedes crear una archivo temporal para probar tu código, sin tener la necesidad de instalar librerías.
 
-**Ejemplo de uso**
-a).- Asegúrate de estar en el entorno virtual y activalo.
-b).- Desde la raíz del proyecto (drf-extra-fields), crea un archivo nuevo llamado probar_urlqr.py.
+### Probar manualmente
 
-```bash
-probar_urlqr.py
-```
-c).- Abre el archivo 'probar_urlqr.py' y dentro agrega el siguiente código:
+Crea un archivo temporal llamado `probar_urlqr.py` y agrega el siguiente código:
 
-```bash
+```python
 from drf_extra_fields.fields.url_qr_field import URLQRField
-```
-```bash
+
 campo = URLQRField()
-```
-```bash
 valor = campo.to_representation("https://github.com/AdanCR1")
-```
-```bash
+
 print("Resultado del campo URLQRField:")
 print(valor)
 ```
-d).- Desde la terminal, asegurate de estar en la carpet raíz del proyecto donde esta 'probar_urlqr.py' y ejecuta:
+
+Ejecuta el archivo con:
 
 ```bash
 python probar_urlqr.py
 ```
 
-Si las pruebas fallan, arréglalas y vuelve a ejecutar el comanado hasta que pasen todas correctamente.
+Corrige los errores si es necesario y vuelve a probar.
 
-## 5. Pull Request(PR)
+## 7. Crear un Pull Request (PR)
 
-Si estás seguro de que tu rama de trabajo está lista para ser revisada, sigue estos pasos:
+1. Ve a: https://github.com/AdanCR1/drf-extra-fields/pulls
+2. Haz clic en **"New Pull Request"**
+3. Configura así:
+   - base: `maestro`
+   - compare: `tu-rama`
 
-- Crea el Pull Request
+Ambas ramas deben ser del repositorio `AdanCR1/drf-extra-fields`.
 
-Desde GitHub de AdanCR1, abre Pull Request (Enlace https://github.com/AdanCR1/drf-extra-fields/pulls), luego dale clic en 'New Pull Requests'.
+![imagendeFork](IMAGES/CapturaConfiguraramas.png)
 
-![imagendeFork](IMAGES/CapturaPullrequests1.png)
+Completa el formulario del PR:
 
-![imagendeFork](IMAGES/CapturaPR2.png)
+![imagendeFork](IMAGES/Formulariopullrequest.png)
 
-- Crea o modifica tu rama con el Pull Request
-
-GitHub detectará automáticamente que has subido una nueva rama ó realizaste algún cambio y mostrará un botón que dice **'New pull request'** ó **'Compare pull request'**.
-
-![imagendeFork](IMAGES/CapturaComparePR4.png)
-
-Por último dale clic en el botón y redacta el Pull Request, por ejemplo: docs/guia-tecnica, esto para que Adan revise tu contribución y nos de un checkout.
+Y haz clic en **"Create pull request"** para enviar tu contribución a revisión.
 
 ![imagendeFork](IMAGES/CapturaD.png)
 
-**Manten tu rama actualizada**
+## 8. Mantener tu rama actualizada
 
-Puedes actualizar tu copia local con:
+Ejecuta el siguiente comando periódicamente:
 
 ```bash
 git pull origin maestro
 ```
-### Notas:
-- Asegúrate de estar en el repositorio correcto (AdanCR1/drf-extra-fields) al crear el Pull Request.
-- Asegúrate de que tu Pull Request sea claro y conciso, describiendo los cambios realizados y su propósito.
+
+## Notas
+
+- Asegúrate de estar en el repositorio correcto (`AdanCR1/drf-extra-fields`) al crear el PR.
+- Describe claramente los cambios en tu Pull Request.
