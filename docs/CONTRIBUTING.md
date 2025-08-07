@@ -114,7 +114,7 @@ git checkout -b docs/pull-request/write
 
 ----
 
-Haz los cambios que te correspondan en tu rama de trabajo. Luego, ejecuta 'git add .' para agregar los cambios y 'git commit -m "mensaje descriptivo"' para confirmar los cambios, posteriormente ya estará listo para solicitar el Pull Request.
+Haz los cambios que te correspondan en tu rama de trabajo. Luego, ejecuta 'git add .' para agregar los cambios y 'git commit -m "mensaje descriptivo"' para confirmar los cambios y git push origin nombre de tu rama, para posteriormente solicitar el Pull Request.
 
 ## 4. Ejecutar las  pruebas con tox
 
@@ -142,21 +142,13 @@ Desde GitHub de AdanCR1, abre Pull Request (Enlace https://github.com/AdanCR1/dr
 
 ![imagendeFork](IMAGES/CapturaPR2.png)
 
-- Crea el Pull Request
+- Crea o modifica el Pull Request
 
-GitHub detectará aumtomáticamente que has subido una nueva rama y mostrará un botón que dice 'Create pull request'.
+GitHub detectará automáticamente que has subido una nueva rama ó realizaste algún cambio y mostrará un botón que dice **'New pull request'** ó **'Compare pull request'**.
 
-![imagendeFork](IMAGES/CapturacreatePR3.png)
+![imagendeFork](IMAGES/CapturaComparePR4.png)
 
-Dale clic en el botón y redacta el Pull Request, por ejemplo: docs/guia-tecnica.
-
-![imagendeFork](IMAGES/CapturaA.png)
-
-En la opción **'base repository'**, debe estar seleccionado el repositorio de 'AdanCR1'.
-
-![imagendeFork](IMAGES/CapturaB.png)
-
-Por último, has clic en **'Create Pull Request'**, esto para que Adan revise tu contribución y nos de un checkout.
+Por último dale clic en el botón y redacta el Pull Request, por ejemplo: docs/guia-tecnica, esto para que Adan revise tu contribución y nos de un checkout.
 
 ![imagendeFork](IMAGES/CapturaD.png)
 
