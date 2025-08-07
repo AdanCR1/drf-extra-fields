@@ -1,29 +1,57 @@
 # Guía Técnica para Contribuir en drf-extra-fields
 
-Este documento explica desde hacer un fork, cómo clonar el repositorio, ramas, configurar el entorno de desarrollo, ejecutar pruebas y realizar Pull Requests.
+Este documento explica desde cómo clonar el repositorio, ramas, configurar el entorno de desarrollo, ejecutar pruebas y realizar Pull Requests.
 Sigue estos pasos para que tu contribución sea sencilla, efectiva y alineada con las buenas prácticas del proyecto.
 ---
-## 1. Crear y clonar el Fork 
+## 1. Clonar el repositorio
 
 **Este paso es muy importante para la contribucion.**
 
-Ingresa a la pagina de git de AdanCR1, dirijete al proyecto drf-extra-fields (link de referencia https://github.com/AdanCR1/drf-extra-fields) y dale clic en Fork para que se cree el nuevo enlace para tu repositorio.
+Ingresa a la pagina de git de AdanCR1, dirijete al proyecto drf-extra-fields (link de referencia https://github.com/AdanCR1/drf-extra-fields) y dale clic en 'Code' para copiar el enlace del repositorio.
 
-![imagendeFork](IMAGES/CapturaFork.png)
+![imagendeFork](IMAGES/Captura1enlace.png)
 
-Una vez creado, crea una carpeta y dentro clona el Fork con el siguiente comando:
+Una vez copiado, crea una carpeta y dentro clona el Fork de Adan con el siguiente comando:
 
 ```bash
-git clone https://github.com/<tu-usuario>/drf-extra-fields.git
+git clone https://github.com/AdanCR1/drf-extra-fields.git
 ```
+## 2 Ingresa al directorio del proyecto
 
-## 2 Cambiar de directorio en la terminal
+Ingresa a la carpeta del proyecto para comenzar a trabajar dentro de ella con el siguiente comando.
 
 ```bash
 cd drf-extra-fields
 ```
 
-## 3 Crea una rama de trabajo de acuerdo a tu FUNCIONALIDAD PRINCIPAL 
+## 3 Crear y activar el entorno virtual para que aisle las dependencias del proyecto
+
+Para crear:
+
+```bash
+python -m venv venv
+```
+
+Para activar:
+
+- **En Windows:**
+
+  ```bash
+  .\venv\Scripts\activate
+  ```
+
+- **En macOS/Linux:**
+
+  ```bash
+  source venv/bin/activate
+  ```
+## 4. Instalar dependencias
+
+```bash
+pip install -r requirements.txt
+```
+
+## 5. Crea una rama de trabajo de acuerdo a tu FUNCIONALIDAD PRINCIPAL 
 
 Cada integrante del equipo debe crear una rama de trabajo basada en la funcionalidad que le corresponde, por lo que se les asignara un nombre de rama específico que refleje su tarea.
 Busquen sus nombres y ejecuten el comando designado para crear su rama de trabajo en el que realizarán sus contribuciones:
@@ -85,15 +113,10 @@ git checkout -b docs/pull-request/write
 ```
 
 ----
-### Luego de crear y cambiar de rama ejecuta este comando para agregar el repositorio original como remoto:
 
-```bash
-git remote add upstream https://github.com/AdanCR1/drf-extra-fields.git
-```
-Es importante que ejecuten ese comando en su rama de trabajo y no en la rama master, ya que la rama master debe permanecer limpia y sin modificaciones directas.
-----
+Haz los cambios que te correspondan en tu rama de trabajo. Luego, ejecuta 'git add .' para agregar los cambios y 'git commit -m "mensaje descriptivo"' para confirmar los cambios, posteriormente ya estará listo para solicitar el Pull Request.
 
-## 4 Ejecutar las  pruebas con tox
+## 4. Ejecutar las  pruebas con tox
 
 Para automatizar las pruebas y asegurar la calidad del código, debes usar los siguientes comandos:
 
@@ -105,9 +128,9 @@ pip install tox
 tox
 ```
 
-Haz los cambios que te correspondan en tu rama de trabajo. Luego, ejecuta 'git add .' para agregar los cambios y 'git commit -m "mensaje descriptivo"' para confirmar los cambios, posteriormente ya estará listo para solicitar el Pull Request.
+Si las prueban fallan, areglalo y vuelve a ejectutar hasta que pase.
 
-## 5 Pull Request(PR)
+## 5. Pull Request(PR)
 
 Si estás seguro de que tu rama de trabajo está lista para ser revisada, sigue estos pasos:
 
