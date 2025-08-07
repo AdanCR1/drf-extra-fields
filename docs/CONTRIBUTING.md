@@ -140,15 +140,15 @@ Desde GitHub de AdanCR1, abre Pull Request (Enlace https://github.com/AdanCR1/dr
 
 ![imagendeFork](IMAGES/CapturaPullrequests1.png)
 
-![imagendeFork](IMAGES/CapturaNewPR2.png)
+![imagendeFork](IMAGES/CapturaPR2.png)
 
-- Iniciar Pull Request
+- Crea el Pull Request
 
-En la opción **'base'**, asegúrate de que esté seleccionado master.
+GitHub detectará aumtomáticamente que has subido una nueva rama y mostrará un botón que dice 'Create pull request'.
 
-![imagendeFork](IMAGES/CapturaC.png)
+![imagendeFork](IMAGES/CapturacreatePR3.png)
 
-En la opción **'compare'** debes seleccionar el nombre de tu Rama, , por ejemplo: docs/guia-tecnica.
+Dale clic en el botón y redacta el Pull Request, por ejemplo: docs/guia-tecnica.
 
 ![imagendeFork](IMAGES/CapturaA.png)
 
