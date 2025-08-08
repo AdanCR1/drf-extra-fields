@@ -120,22 +120,22 @@ git checkout -b docs/pull-request/write
 **Tienen que ingresar a los siguientes directorios:**
 
 - Directorio para GRUPO B
-Deben de ingresar a la carpeta 'drf_extra_fields' e ingresar al archivo 'test_fields.py', para que luego realizen sus testeos.
+Deben de ingresar a la carpeta 'drf_extra_fields' e ingresar al archivo 'fields.py', para para agegar funciones QR personalizadas.
 
 ![imagendeFork](IMAGES/CapturaDirectdrfef.png)
 
-Para los del grupo B, debe existir coordinación con Marshell quien ha creado la clase base. 
+Para los del grupo B, debe existir coordinación con Marshell quien ha creado la clase base que deben extender. 
 
 - Directorio para GRUPO C
 
-Deben de ingresar a la carpeta 'test' e ingresar al archivo 'test_fields.py', para que luego realizen sus testeos.
+Deben de ingresar a la carpeta 'test' e ingresar al archivo 'test_fields.py', para que luego ahí agreguen sus clases de prueba.
 
 ![imagendeFork](IMAGES/CapturaDirecttest.png)
 
 
 ![imagendeFork](IMAGES/CapturaDtest.png)
 
-Importante establecer que debe existir coordinación con el grupo B ya que entre ambos trabajos exite relación en sus funciones. 
+Importante establecer que debe existir coordinación entre el grupo B y C ya que las pruebas se harán sobre las funciones creadas. 
 
 - Para el GRUPO D
 
@@ -143,7 +143,7 @@ Dirigirse simplemente al archivo 'README.md' para realizar los cambios.
 
 ![imagendeFork](IMAGES/CapturaReadme.png)
 
-Importante establecer que tiene que estar ubicado en la parte final, antes de CONTRIBUTION.
+Importante instruir que los cambios debe estar ubicado en la parte final del archivo, antes de CONTRIBUTION.
 
 **Ejemplo de uso para hacer el test**
 
@@ -177,6 +177,8 @@ class UrlQRCodeFieldTests(TestCase):
         self.assertIn('url', serializer.errors)
 
 En el archivo tests/test_fields.py. deben de crear sus nuevas clases siguiendo el patrón de la clase Base64ImageSerializerTests.
+
+**Guardar y subir tus cambios**
 
 Haz los cambios que te correspondan en tu rama de trabajo. Luego, ejecuta en la terminal: 'git add .' para agregar los cambios, 'git commit -m "mensaje descriptivo"' para confirmar los cambios y 'git push origin nombre de tu rama', para posteriormente solicitar el Pull Request.
 
