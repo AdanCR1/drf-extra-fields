@@ -1,4 +1,3 @@
-
 # Guía Técnica para Contribuir en el proyecto drf-extra-fields
 
 Este documento explica desde cómo clonar el repositorio, crear ramas, configurar el entorno de desarrollo, ejecutar pruebas y realizar Pull Requests.
@@ -57,65 +56,129 @@ pip install -r requirements.txt
 
 ## 5. Crear una rama de trabajo según tu responsabilidad
 
-Cada integrante del equipo debe crear una rama basada en su funcionalidad asignada. Usa el comando correspondiente:
+Cada integrante del equipo debe crear una rama de trabajo basada en la funcionalidad que le corresponde, por lo que se les asignará un nombre de rama específico que refleje su tarea.
+Busquen sus nombres y ejecuten el comando designado para crear su rama de trabajo en el que realizarán sus contribuciones:
 
-### Grupo B - CAMPOS ESPECIALIZADOS
+- Grupo B - CAMPOS ESPECIALIZADOS
 
-- **Mary Villca**  
+Rama para Mary Villca:
 ```bash
 git checkout -b feature/urlqr/implement
 ```
 
-- **Jorge Choque**  
+Rama para Jorge Choque:
 ```bash
 git checkout -b feature/wifiqr/implement
 ```
 
-- **Celso Velasco**  
+Rama para Celso Velasco:
 ```bash
 git checkout -b feature/vcardqr/implement
 ```
 
-### Grupo C - TESTING AUTOMATIZADO
+- Grupo C - TESTING AUTOMATIZADO
 
-- **Gerardo Burgos**  
+Rama para Gerardo Burgos:
 ```bash
 git checkout -b test/baseqr/unit
 ```
 
-- **Rommel Valda**  
+Rama para Rommel Valda:
 ```bash
 git checkout -b test/urlqr/unit
 ```
 
-- **Carlos Marcelo**  
+Rama para Carlos Marcelo:
 ```bash
 git checkout -b test/wifiqr/unit
 ```
 
-- **Jhony Quispe**  
+Rama para Jhony Quispe: 'test/vcardqr/unit'
 ```bash
 git checkout -b test/vcardqr/unit
 ```
 
-### Grupo D - DOCUMENTACIÓN Y REVISIÓN
+- Grupo D - DOCUMENTACIÓN Y REVISIÓN
 
-- **Jhon Escobar**  
+Rama para Jhon Escobar:
 ```bash
 git checkout -b docs/redaction/review
 ```
 
-- **Clemente Isla**  
+Rama para Clemente Isla:
 ```bash
 git checkout -b docs/integration-drf/examples
 ```
 
-- **Kevin Navia**  
+Rama para Kevin Navia:
 ```bash
 git checkout -b docs/pull-request/write
 ```
+----
 
-Luego realiza tus cambios y usa los siguientes comandos:
+**Directorio para los que van a implementar funciones**
+**Tienen que ingresar a los siguientes directorios:**
+
+- Directorio para GRUPO B
+Deben de ingresar a la carpeta 'drf_extra_fields' e ingresar al archivo 'test_fields.py', para que luego realizen sus testeos.
+
+![imagendeFork](IMAGES/CapturaDirectdrfef.png)
+
+Para los del grupo B, debe existir coordinación con Marshell quien ha creado la clase base. 
+
+- Directorio para GRUPO C
+
+Deben de ingresar a la carpeta 'test' e ingresar al archivo 'test_fields.py', para que luego realizen sus testeos.
+
+![imagendeFork](IMAGES/CapturaDirecttest.png)
+
+
+![imagendeFork](IMAGES/CapturaDtest.png)
+
+Importante establecer que debe existir coordinación con el grupo B ya que entre ambos trabajos exite relación en sus funciones. 
+
+- Para el GRUPO D
+
+Dirigirse simplemente al archivo 'README.md' para realizar los cambios.
+
+![imagendeFork](IMAGES/CapturaReadme.png)
+
+Importante establecer que tiene que estar ubicado en la parte final, antes de CONTRIBUTION.
+
+**Ejemplo de uso para hacer el test**
+
+from drf_extra_fields.fields import UrlQRCodeField
+from rest_framework import serializers
+from django.test import TestCase
+from django.core.exceptions import ValidationError
+
+
+class UrlQRCodeSerializer(serializers.Serializer):
+    url = UrlQRCodeField()
+
+
+class UrlQRCodeFieldTests(TestCase):
+    def test_valid_url(self):
+        data = {'url': 'https://example.com'}
+        serializer = UrlQRCodeSerializer(data=data)
+        self.assertTrue(serializer.is_valid(), serializer.errors)
+        self.assertEqual(serializer.validated_data['url'], data['url'])
+
+    def test_invalid_url(self):
+        data = {'url': 'not-a-valid-url'}
+        serializer = UrlQRCodeSerializer(data=data)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn('url', serializer.errors)
+
+    def test_blank_url(self):
+        data = {'url': ''}
+        serializer = UrlQRCodeSerializer(data=data)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn('url', serializer.errors)
+
+En el archivo tests/test_fields.py. deben de crear sus nuevas clases siguiendo el patrón de la clase Base64ImageSerializerTests.
+
+Haz los cambios que te correspondan en tu rama de trabajo. Luego, ejecuta en la terminal: 'git add .' para agregar los cambios, 'git commit -m "mensaje descriptivo"' para confirmar los cambios y 'git push origin nombre de tu rama', para posteriormente solicitar el Pull Request.
 
 ```bash
 git add .
@@ -127,34 +190,24 @@ git push origin nombre-de-tu-rama
 
 ## 6. Ejecutar y probar tu código localmente
 
-### Ejecutar pruebas con tox
+**Ejecutar pruebas con tox**
+Para automatizar las pruebas y asegurar la calidad del código, debes usar los siguientes comandos:
 
 ```bash
 pip install tox
-tox
 ```
-
-### Probar manualmente
-
-Crea un archivo temporal llamado `probar_urlqr.py` y agrega el siguiente código:
-
-```python
-from drf_extra_fields.fields.url_qr_field import URLQRField
-
-campo = URLQRField()
-valor = campo.to_representation("https://github.com/AdanCR1")
-
-print("Resultado del campo URLQRField:")
-print(valor)
-```
-
-Ejecuta el archivo con:
 
 ```bash
-python probar_urlqr.py
+tox
 ```
+**Probar tu código de forma manual**
+Puedes crear una archivo temporal para probar tu código, sin tener la necesidad de instalar librerías.
 
-Corrige los errores si es necesario y vuelve a probar.
+**Ejemplo de uso**
+a).- Asegúrate de estar en el entorno virtual y activalo.
+b).- Desde la raíz del proyecto (drf-extra-fields), crea un archivo momentaneo nuevo .py para realizar las pruebas.
+
+Si las pruebas fallan, arréglalas y vuelve a ejecutar el comanado hasta que pasen todas correctamente.
 
 ## 7. Crear un Pull Request (PR)
 
@@ -188,3 +241,4 @@ git pull origin maestro
 
 - Asegúrate de estar en el repositorio correcto (`AdanCR1/drf-extra-fields`) al crear el PR.
 - Describe claramente los cambios en tu Pull Request.
+- Para los que van a implementar, después de que hagan las pruebas, deben sacar Captura de pantalla y ponerlos dentro la carpeta 'Imagenes', que se encuentra ubicado dentro de la carpeta 'docs', y ponerlo con su nombre personal para mayor presición hacia la revisión.
