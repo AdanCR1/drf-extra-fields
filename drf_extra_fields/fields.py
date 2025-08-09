@@ -319,18 +319,39 @@ class LowercaseEmailField(EmailField):
 
 
 class BaseQRCodeField(ImageField):
-    def to_representation(self, value):
-        if not value:
-            return None
+    """
+    Field for generating QR codes from text input.
+    Receives text from client and converts it to QR code image.
+    """
+
+    def to_internal_value(self, data):
+        if not data:
+            raise ValidationError("Cannot generate QR code from empty text")
+            
+        if not isinstance(data, str):
+            raise ValidationError("Expected text to generate QR code")
+            
         try:
             import qrcode
         except ImportError:
-            raise ImportError("qrcode library is required. Please install it using 'pip install qrcode'.")
+            raise ImportError("Install library: pip install qrcode")
 
-        qr_image = qrcode.make(value)
-
+        qr = qrcode.QRCode()
+        qr.add_data(data)
+        qr.make()
+        qr_image = qr.make_image()
+        
         buffer = io.BytesIO()
         qr_image.save(buffer, format='PNG')
+        
+        file_name = f"qrcode_{uuid.uuid4()}.png"
+        uploaded_file = SimpleUploadedFile(
+            name=file_name,
+            content=buffer.getvalue(),
+            content_type='image/png'
+        )
+        
+        return super().to_internal_value(uploaded_file)
 
-        encoded_image = base64.b64encode(buffer.getvalue()).decode()
-        return f"data:image/png;base64,{encoded_image}"
+    def to_representation(self, value):
+        return super().to_representation(value)
