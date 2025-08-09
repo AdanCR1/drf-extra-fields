@@ -43,7 +43,9 @@ class Base64FieldMixin:
         raise NotImplementedError
 
     def __init__(self, *args, **kwargs):
-        self.trust_provided_content_type = kwargs.pop("trust_provided_content_type", False)
+        self.trust_provided_content_type = kwargs.pop(
+            "trust_provided_content_type", False
+        )
         self.represent_in_base64 = kwargs.pop("represent_in_base64", False)
         super().__init__(*args, **kwargs)
 
@@ -80,12 +82,14 @@ class Base64FieldMixin:
             data = SimpleUploadedFile(
                 name=complete_file_name,
                 content=decoded_file,
-                content_type=file_mime_type
+                content_type=file_mime_type,
             )
 
             return super().to_internal_value(data)
 
-        raise ValidationError(_(f"Invalid type. This is not an base64 string: {type(base64_data)}"))
+        raise ValidationError(
+            _(f"Invalid type. This is not an base64 string: {type(base64_data)}")
+        )
 
     def get_file_extension(self, filename, decoded_file):
         raise NotImplementedError
@@ -116,13 +120,8 @@ class Base64ImageField(Base64FieldMixin, ImageField):
     A django-rest-framework field for handling image-uploads through raw post data.
     It uses base64 for en-/decoding the contents of the file.
     """
-    ALLOWED_TYPES = (
-        "jpeg",
-        "jpg",
-        "png",
-        "gif",
-        "webp"
-    )
+
+    ALLOWED_TYPES = ("jpeg", "jpg", "png", "gif", "webp")
     INVALID_FILE_MESSAGE = _("Please upload a valid image.")
     INVALID_TYPE_MESSAGE = _("The type of the image couldn't be determined.")
 
@@ -133,6 +132,34 @@ class Base64ImageField(Base64FieldMixin, ImageField):
                 # Try with PIL as fallback if format not detected
                 # with `filetype` module
                 from PIL import Image
+
+                image = Image.open(io.BytesIO(decoded_file))
+            except (ImportError, OSError):
+                raise ValidationError(self.INVALID_FILE_MESSAGE)
+            else:
+                extension = image.format.lower()
+
+        return "jpg" if extension == "jpeg" else extension
+
+
+class CopiaBase64ImageField(Base64FieldMixin, ImageField):
+    """
+    A django-rest-framework field for handling image-uploads through raw post data.
+    It uses base64 for en-/decoding the contents of the file.
+    """
+
+    ALLOWED_TYPES = ("jpeg", "jpg", "png", "gif", "webp")
+    INVALID_FILE_MESSAGE = _("Please upload a valid image.")
+    INVALID_TYPE_MESSAGE = _("The type of the image couldn't be determined.")
+
+    def get_file_extension(self, filename, decoded_file):
+        extension = filetype.guess_extension(decoded_file)
+        if extension is None:
+            try:
+                # Try with PIL as fallback if format not detected
+                # with `filetype` module
+                from PIL import Image
+
                 image = Image.open(io.BytesIO(decoded_file))
             except (ImportError, OSError):
                 raise ValidationError(self.INVALID_FILE_MESSAGE)
@@ -168,27 +195,35 @@ class Base64FileField(Base64FieldMixin, FileField):
 
     @property
     def ALLOWED_TYPES(self):
-        raise NotImplementedError('List allowed file extensions')
+        raise NotImplementedError("List allowed file extensions")
 
     INVALID_FILE_MESSAGE = _("Please upload a valid file.")
     INVALID_TYPE_MESSAGE = _("The type of the file couldn't be determined.")
 
     def get_file_extension(self, filename, decoded_file):
-        raise NotImplementedError('Implement file validation and return matching extension.')
+        raise NotImplementedError(
+            "Implement file validation and return matching extension."
+        )
 
 
 class RangeField(DictField):
     range_type = None
 
     default_error_messages = dict(DictField.default_error_messages)
-    default_error_messages.update({
-        'too_much_content': _('Extra content not allowed "{extra}".'),
-        'bound_ordering': _('The start of the range must not exceed the end of the range.'),
-    })
+    default_error_messages.update(
+        {
+            "too_much_content": _('Extra content not allowed "{extra}".'),
+            "bound_ordering": _(
+                "The start of the range must not exceed the end of the range."
+            ),
+        }
+    )
 
     def __init__(self, **kwargs):
         if compat.postgres_fields is None:
-            assert False, "'psycopg' is required to use {name}. Please install the 'psycopg2' (or 'psycopg' if you are using Django>=4.2) library from 'pip'".format(
+            assert (
+                False
+            ), "'psycopg' is required to use {name}. Please install the 'psycopg2' (or 'psycopg' if you are using Django>=4.2) library from 'pip'".format(
                 name=self.__class__.__name__
             )
 
@@ -203,18 +238,18 @@ class RangeField(DictField):
         if html.is_html_input(data):
             data = html.parse_html_dict(data)
         if not isinstance(data, dict):
-            self.fail('not_a_dict', input_type=type(data).__name__)
+            self.fail("not_a_dict", input_type=type(data).__name__)
 
         # allow_empty is added to DictField in DRF Version 3.9.3
         if hasattr(self, "allow_empty") and not self.allow_empty and len(data) == 0:
-            self.fail('empty')
+            self.fail("empty")
 
         extra_content = list(set(data) - {"lower", "upper", "bounds", "empty"})
         if extra_content:
-            self.fail('too_much_content', extra=', '.join(map(str, extra_content)))
+            self.fail("too_much_content", extra=", ".join(map(str, extra_content)))
 
         validated_dict = {}
-        for key in ('lower', 'upper'):
+        for key in ("lower", "upper"):
             try:
                 value = data[key]
             except KeyError:
@@ -222,11 +257,11 @@ class RangeField(DictField):
 
             validated_dict[str(key)] = self.child.run_validation(value)
 
-        lower, upper = validated_dict.get('lower'), validated_dict.get('upper')
+        lower, upper = validated_dict.get("lower"), validated_dict.get("upper")
         if lower is not None and upper is not None and lower > upper:
-            self.fail('bound_ordering')
+            self.fail("bound_ordering")
 
-        for key in ('bounds', 'empty'):
+        for key in ("bounds", "empty"):
             try:
                 value = data[key]
             except KeyError:
@@ -249,14 +284,16 @@ class RangeField(DictField):
             bounds = value.get("bounds")
         else:
             if value.isempty:
-                return {'empty': True}
+                return {"empty": True}
             lower = value.lower
             upper = value.upper
             bounds = value._bounds
 
-        return {'lower': self.child.to_representation(lower) if lower is not None else None,
-                'upper': self.child.to_representation(upper) if upper is not None else None,
-                'bounds': bounds}
+        return {
+            "lower": self.child.to_representation(lower) if lower is not None else None,
+            "upper": self.child.to_representation(upper) if upper is not None else None,
+            "bounds": bounds,
+        }
 
     def get_initial(self):
         initial = super().get_initial()
@@ -296,12 +333,22 @@ class DateRangeField(RangeField):
 if compat.postgres_fields:
     # monkey patch modelserializer to map Native django Range fields to
     # drf_extra_fiels's Range fields.
-    ModelSerializer.serializer_field_mapping[compat.postgres_fields.DateTimeRangeField] = DateTimeRangeField
-    ModelSerializer.serializer_field_mapping[compat.postgres_fields.DateRangeField] = DateRangeField
-    ModelSerializer.serializer_field_mapping[compat.postgres_fields.IntegerRangeField] = IntegerRangeField
-    ModelSerializer.serializer_field_mapping[compat.postgres_fields.DecimalRangeField] = DecimalRangeField
+    ModelSerializer.serializer_field_mapping[
+        compat.postgres_fields.DateTimeRangeField
+    ] = DateTimeRangeField
+    ModelSerializer.serializer_field_mapping[compat.postgres_fields.DateRangeField] = (
+        DateRangeField
+    )
+    ModelSerializer.serializer_field_mapping[
+        compat.postgres_fields.IntegerRangeField
+    ] = IntegerRangeField
+    ModelSerializer.serializer_field_mapping[
+        compat.postgres_fields.DecimalRangeField
+    ] = DecimalRangeField
     if hasattr(compat.postgres_fields, "FloatRangeField"):
-        ModelSerializer.serializer_field_mapping[compat.postgres_fields.FloatRangeField] = FloatRangeField
+        ModelSerializer.serializer_field_mapping[
+            compat.postgres_fields.FloatRangeField
+        ] = FloatRangeField
 
 
 class LowercaseEmailField(EmailField):
@@ -309,6 +356,7 @@ class LowercaseEmailField(EmailField):
     An enhancement over django-rest-framework's EmailField to allow
     case-insensitive serialization and deserialization of e-mail addresses.
     """
+
     def to_internal_value(self, data):
         data = super().to_internal_value(data)
         return data.lower()
@@ -334,7 +382,7 @@ class BaseQRCodeField(ImageField):
         try:
             import qrcode
         except ImportError:
-            raise ImportError("Install library: pip install qrcode")
+            raise ImportError("qrcode library is required. Please install it using 'pip install qrcode'.")
 
         qr = qrcode.QRCode()
         qr.add_data(data)

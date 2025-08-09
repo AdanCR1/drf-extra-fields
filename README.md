@@ -1,4 +1,5 @@
-DRF-EXTRA-FIELDS
+# DRF-EXTRA-FIELDS
+
 ================
 
 Extra Fields for Django Rest Framework
@@ -8,15 +9,18 @@ Extra Fields for Django Rest Framework
 [![PyPI Version](https://img.shields.io/pypi/v/drf-extra-fields.svg)](https://pypi.org/project/drf-extra-fields)
 [![Python Versions](https://img.shields.io/pypi/pyversions/drf-extra-fields.svg)](https://pypi.org/project/drf-extra-fields)
 
-Latest Changes
-==============
+# Latest Changes
+
 - **v3.7.0**
-  - `psycopg` (psycopg 3) is now supported and it's used automatically instead of `psycopg2` if available.
+  - `psycopg` (psycopg 3) is now supported and it's used automatically instead
+    of `psycopg2` if available.
 - **v3.6.0**
-  - File objects without an actual file-system path can now be used in `Base64ImageField`, `Base64FileField` and `HybridImageField`
+  - File objects without an actual file-system path can now be used in
+    `Base64ImageField`, `Base64FileField` and `HybridImageField`
 - **v3.5.0**
   - Development environment fixes & improvements.
-  - Since `Python 3.6` support is ended, the codebase is refactored/modernized for `Python 3.7`.
+  - Since `Python 3.6` support is ended, the codebase is refactored/modernized
+    for `Python 3.7`.
   - `WebP` is added to default `ALLOWED_TYPES` of the `Base64ImageField`.
   - Deprecated `imghdr` library is replaced with `filetype`.
   - Unintended `Pillow` dependency is removed.
@@ -28,7 +32,8 @@ Latest Changes
   - :warning: **BACKWARD INCOMPATIBLE** :warning:
     - Support for `Python 3.6` is ended.
 - **v3.2.1**
-  - A typo in the `python_requires` argument of `setup.py` that prevents installation for `Python 3.6` is fixed.
+  - A typo in the `python_requires` argument of `setup.py` that prevents
+    installation for `Python 3.6` is fixed.
 - **v3.2.0**
   - :warning: **BACKWARD INCOMPATIBLE** :warning:
     - Support for `Python 3.5` is ended.
@@ -38,11 +43,13 @@ Latest Changes
   - `psycopg2` dependency is made optional.
 - **v3.1.0**
   - **Possible Breaking Change**:
-    -  In this version we have changed file class used in `Base64FileField` from `ContentFile` to `SimpleUploadedFile` (you may see the change [here](https://github.com/Hipo/drf-extra-fields/pull/149/files#diff-5f77bcb61083cd9c026f6dfb3b77bf8fa824c45e620cdb7826ad713bde7b65f8L72-R85)).
-  - `child_attrs` property is added to [RangeFields](https://github.com/Hipo/drf-extra-fields#rangefield).
+    - In this version we have changed file class used in `Base64FileField` from
+      `ContentFile` to `SimpleUploadedFile` (you may see the change
+      [here](https://github.com/Hipo/drf-extra-fields/pull/149/files#diff-5f77bcb61083cd9c026f6dfb3b77bf8fa824c45e620cdb7826ad713bde7b65f8L72-R85)).
+  - `child_attrs` property is added to
+    [RangeFields](https://github.com/Hipo/drf-extra-fields#rangefield).
 
-Usage
-================
+# Usage
 
 Install the package
 
@@ -51,13 +58,13 @@ pip install drf-extra-fields
 ```
 
 **Note:**
-- **This package renamed as "drf-extra-fields", earlier it was named as django-extra-fields.**
-- Install version 0.1 for Django Rest Framework 2.*
-- Install version 0.3 or greater for Django Rest Framework 3.*
 
-Fields:
-----------------
+- **This package renamed as "drf-extra-fields", earlier it was named as
+  django-extra-fields.**
+- Install version 0.1 for Django Rest Framework 2.\*
+- Install version 0.3 or greater for Django Rest Framework 3.\*
 
+## Fields:
 
 ## Base64ImageField
 
@@ -65,15 +72,18 @@ An image representation for Base64ImageField
 
 Inherited from `ImageField`
 
-
 **Signature:** `Base64ImageField()`
 
- - It takes a base64 image as a string.
- - A base64 image:  `data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7`
- - Base64ImageField accepts the entire string or just the part after base64, `R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7`
- - It takes the optional parameter `represent_in_base64` (`False` by default), if set to `True` it will allow for base64-encoded downloads of an `ImageField`.
- - You can inherit the `Base64ImageField` class and set allowed extensions (`ALLOWED_TYPES` list), or customize the validation messages (`INVALID_FILE_MESSAGE`, `INVALID_TYPE_MESSAGE`)
-
+- It takes a base64 image as a string.
+- A base64 image:
+  `data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7`
+- Base64ImageField accepts the entire string or just the part after base64,
+  `R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7`
+- It takes the optional parameter `represent_in_base64` (`False` by default), if
+  set to `True` it will allow for base64-encoded downloads of an `ImageField`.
+- You can inherit the `Base64ImageField` class and set allowed extensions
+  (`ALLOWED_TYPES` list), or customize the validation messages
+  (`INVALID_FILE_MESSAGE`, `INVALID_TYPE_MESSAGE`)
 
 **Example:**
 
@@ -91,20 +101,19 @@ file = 'R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
 serializer = UploadedBase64ImageSerializer(data={'created': now, 'file': file})
 ```
 
-
 ## Base64FileField
 
 A file representation for Base64FileField
 
 Inherited from `FileField`
 
-
 **Signature:** `Base64FileField()`
 
- - It takes a base64 file as a string.
- - Other options like for `Base64ImageField`
- - You have to provide your own full implementation of this class. You have to implement file validation in `get_file_extension` method and set `ALLOWED_TYPES` list.
-
+- It takes a base64 file as a string.
+- Other options like for `Base64ImageField`
+- You have to provide your own full implementation of this class. You have to
+  implement file validation in `get_file_extension` method and set
+  `ALLOWED_TYPES` list.
 
 **Example:**
 
@@ -121,23 +130,20 @@ class PDFBase64File(Base64FileField):
             return 'pdf'
 ```
 
-
 ## PointField
 
 Point field for GeoDjango
 
-
 **Signature:** `PointField()`
 
- - It takes a dictionary contains latitude and longitude keys like below
+- It takes a dictionary contains latitude and longitude keys like below
 
-    {
-     "latitude": 49.8782482189424,
-     "longitude": 24.452545489
-    }
- - It takes the optional parameter `str_points` (False by default), if set to True it serializes the longitude/latitude
- values as strings
- - It takes the optional parameter `srid` (None by default), if set the Point created object will have its srid attribute set to the same value.
+  { "latitude": 49.8782482189424, "longitude": 24.452545489 }
+
+- It takes the optional parameter `str_points` (False by default), if set to
+  True it serializes the longitude/latitude values as strings
+- It takes the optional parameter `srid` (None by default), if set the Point
+  created object will have its srid attribute set to the same value.
 
 **Example:**
 
@@ -158,14 +164,16 @@ point = {
 serializer = PointFieldSerializer(data={'created': now, 'point': point})
 ```
 
-
 # RangeField
 
-The Range Fields map to Django's PostgreSQL specific [Range Fields](https://docs.djangoproject.com/en/stable/ref/contrib/postgres/fields/#range-fields).
+The Range Fields map to Django's PostgreSQL specific
+[Range Fields](https://docs.djangoproject.com/en/stable/ref/contrib/postgres/fields/#range-fields).
 
-Each accepts an optional parameter `child_attrs`, which allows passing parameters to the child field.
+Each accepts an optional parameter `child_attrs`, which allows passing
+parameters to the child field.
 
-For example, calling `IntegerRangeField(child_attrs={"allow_null": True})` allows deserializing data with a null value for `lower` and/or `upper`:
+For example, calling `IntegerRangeField(child_attrs={"allow_null": True})`
+allows deserializing data with a null value for `lower` and/or `upper`:
 
 ```python
 from rest_framework import serializers
@@ -263,7 +271,9 @@ serializer = RangeSerializer(data={'ranges': {'lower': datetime.datetime(2015, 1
 
 Represents related object with a serializer.
 
-`presentation_serializer` could also be a string that represents a dotted path of a serializer, this is useful when you want to represent a related field with the same serializer.
+`presentation_serializer` could also be a string that represents a dotted path
+of a serializer, this is useful when you want to represent a related field with
+the same serializer.
 
 ```python
 from drf_extra_fields.relations import PresentablePrimaryKeyRelatedField
@@ -301,6 +311,7 @@ class PostSerializer(serializers.ModelSerializer):
 ```
 
 **Serializer data:**
+
 ```
 {
     "user": 1,
@@ -309,6 +320,7 @@ class PostSerializer(serializers.ModelSerializer):
 ```
 
 **Serialized data with PrimaryKeyRelatedField:**
+
 ```
 {
     "id":1,
@@ -318,6 +330,7 @@ class PostSerializer(serializers.ModelSerializer):
 ```
 
 **Serialized data with PresentablePrimaryKeyRelatedField:**
+
 ```
 {
     "id":1,
@@ -328,7 +341,6 @@ class PostSerializer(serializers.ModelSerializer):
     "title": "test"
 }
 ```
-
 
 ## PresentableSlugRelatedField
 
@@ -372,6 +384,7 @@ class ProductSerializer(serializers.ModelSerializer):
 ```
 
 **Serializer data:**
+
 ```
 {
     "category": "vegetables",
@@ -380,6 +393,7 @@ class ProductSerializer(serializers.ModelSerializer):
 ```
 
 **Serialized data with SlugRelatedField:**
+
 ```
 {
     "id": 1,
@@ -389,6 +403,7 @@ class ProductSerializer(serializers.ModelSerializer):
 ```
 
 **Serialized data with PresentableSlugRelatedField:**
+
 ```
 {
     "id": 1,
@@ -402,10 +417,15 @@ class ProductSerializer(serializers.ModelSerializer):
 ```
 
 ### read_source parameter
-This parameter allows you to use different `source` for read operations and doesn't change field name for write operations. This is only used while representing the data. 
+
+This parameter allows you to use different `source` for read operations and
+doesn't change field name for write operations. This is only used while
+representing the data.
 
 ## HybridImageField
-A django-rest-framework field for handling image-uploads through raw post data, with a fallback to multipart form data.
+
+A django-rest-framework field for handling image-uploads through raw post data,
+with a fallback to multipart form data.
 
 It first tries Base64ImageField. if it fails then tries ImageField.
 
@@ -418,9 +438,13 @@ class HybridImageSerializer(serializers.Serializer):
     image = HybridImageField()
 ```
 
-drf-yasg fix for BASE64 Fields:
-----------------
-The [drf-yasg](https://github.com/axnsan12/drf-yasg) project seems to generate wrong documentation on Base64ImageField or Base64FileField. It marks those fields as readonly. Here is the workaround code for correct the generated document. (More detail on issue [#66](https://github.com/Hipo/drf-extra-fields/issues/66))
+## drf-yasg fix for BASE64 Fields:
+
+The [drf-yasg](https://github.com/axnsan12/drf-yasg) project seems to generate
+wrong documentation on Base64ImageField or Base64FileField. It marks those
+fields as readonly. Here is the workaround code for correct the generated
+document. (More detail on issue
+[#66](https://github.com/Hipo/drf-extra-fields/issues/66))
 
 ```python
 class PDFBase64FileField(Base64FileField):
@@ -443,9 +467,10 @@ class PDFBase64FileField(Base64FileField):
             return 'pdf'
 ```
 
-
 ## LowercaseEmailField
-An enhancement over django-rest-framework's EmailField to allow case-insensitive serialization and deserialization of e-mail addresses.
+
+An enhancement over django-rest-framework's EmailField to allow case-insensitive
+serialization and deserialization of e-mail addresses.
 
 ```python
 from rest_framework import serializers
@@ -457,12 +482,12 @@ class EmailSerializer(serializers.Serializer):
 
 ```
 
-CONTRIBUTION
-=================
+# CONTRIBUTION
 
 **TESTS**
+
 - Make sure that you add the test for contributed field to test/test_fields.py
-and run with command before sending a pull request:
+  and run with command before sending a pull request:
 
 ```bash
 $ pip install tox  # if not already installed
@@ -477,22 +502,20 @@ tox
 ```
 
 **README**
+
 - Make sure that you add the documentation for the field added to README.md
 
-
-LICENSE
-====================
+# LICENSE
 
 Copyright DRF EXTRA FIELDS HIPO
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this file except in compliance with the License. You may obtain a copy of the
+License at
 
     http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+Unless required by applicable law or agreed to in writing, software distributed
+under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+CONDITIONS OF ANY KIND, either express or implied. See the License for the
+specific language governing permissions and limitations under the License.
