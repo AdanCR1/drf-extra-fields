@@ -145,8 +145,9 @@ Dirigirse simplemente al archivo 'README.md' para realizar los cambios.
 
 Importante instruir que los cambios debe estar ubicado en la parte final del archivo, antes de CONTRIBUTION.
 
-**Ejemplo de uso para hacer el test**
+**Ejemplo de uso para hacer el test (grupo C)**
 
+```python
 from drf_extra_fields.fields import UrlQRCodeField
 from rest_framework import serializers
 from django.test import TestCase
@@ -175,6 +176,9 @@ class UrlQRCodeFieldTests(TestCase):
         serializer = UrlQRCodeSerializer(data=data)
         self.assertFalse(serializer.is_valid())
         self.assertIn('url', serializer.errors)
+```
+
+Este ejemplo está generado con IA siguiendo el patrón de la clase Base64ImageSerializerTests. Por lo que se recomienda que tomen una parte del codigo del archivo tests/test_fields.py como ejemplo, sigan el mismo enfoque y lo adapten a sus necesidades.
 
 En el archivo tests/test_fields.py. deben de crear sus nuevas clases siguiendo el patrón de la clase Base64ImageSerializerTests.
 
@@ -211,12 +215,22 @@ b).- Desde la raíz del proyecto (drf-extra-fields), crea un archivo momentaneo 
 
 Si las pruebas fallan, arréglalas y vuelve a ejecutar el comanado hasta que pasen todas correctamente.
 
+## 6.1 Enviar imagen de Validación
+
+En la carpeta `docs/IMAGES`, guarda una captura de pantalla que valide tu implementación.
+
+![imagen de validación](IMAGES/Capturadirectorio.jpg)
+
+El nombre del archivo imagen debe ser asi: `Adan_Cap_validacion.jpg`
+Primero tu nombre y luego Cap_validacion. Esto con la finalidad de identificar fácilmente la captura de pantalla (OJO, no se aceptará el pull request sin la captura de validacion).
+La captura de pantalla debe mostrar claramente la funcionalidad que has implementado o modificado.
+
 ## 7. Crear un Pull Request (PR)
 
 1. Ve a: https://github.com/AdanCR1/drf-extra-fields/pulls
 2. Haz clic en **"New Pull Request"**
 3. Configura así:
-   - base: `maestro`
+   - base: `master`
    - compare: `tu-rama`
 
 Ambas ramas deben ser del repositorio `AdanCR1/drf-extra-fields`.
@@ -236,11 +250,11 @@ Y haz clic en **"Create pull request"** para enviar tu contribución a revisión
 Ejecuta el siguiente comando periódicamente:
 
 ```bash
-git pull origin maestro
+git pull origin master
 ```
 
 ## Notas
 
 - Asegúrate de estar en el repositorio correcto (`AdanCR1/drf-extra-fields`) al crear el PR.
-- Describe claramente los cambios en tu Pull Request.
-- Para los que van a implementar, después de que hagan las pruebas, deben sacar Captura de pantalla y ponerlos dentro la carpeta 'Imagenes', que se encuentra ubicado dentro de la carpeta 'docs', y ponerlo con su nombre personal para mayor presición hacia la revisión.
+- Describe claramente los cambios en tu Pull Request, un titulo claro y una descripción breve.
+- Ante cualquier duda o consulta, contacta con cualquier miembro del grupo A.
