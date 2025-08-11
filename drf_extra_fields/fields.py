@@ -403,3 +403,29 @@ class BaseQRCodeField(ImageField):
 
     def to_representation(self, value):
         return super().to_representation(value)
+
+
+class vCardQRCodeField(BaseQRCodeField):
+    """
+    a field that generates a QR code with a vCard dictionary.
+    """
+
+    def to_internal_value(self, data):
+        if not isinstance(data, dict):
+            raise ValidationError("Expected a dictionary for vCard data.")
+        
+        required_fields = ['name', 'phone', 'email']
+        for field in required_fields:
+            if field not in data or not data[field]:
+                raise ValidationError(f"Missing or empty required field: '{field}'")
+        
+        vcard_string = (
+            f"BEGIN:VCARD\n"
+            f"VERSION:3.0\n"
+            f"FN:{data['name']}\n"
+            f"TEL:{data['phone']}\n"
+            f"EMAIL:{data['email']}\n"
+            f"END:VCARD"
+        )
+        
+        return super().to_internal_value(vcard_string)
