@@ -21,6 +21,7 @@ from rest_framework.fields import (
 from rest_framework.serializers import ModelSerializer
 from rest_framework.utils import html
 
+
 from drf_extra_fields import compat
 from drf_extra_fields.compat import DateRange, DateTimeTZRange, NumericRange
 
@@ -405,27 +406,39 @@ class BaseQRCodeField(ImageField):
         return super().to_representation(value)
 
 
+
 class vCardQRCodeField(BaseQRCodeField):
     """
-    a field that generates a QR code with a vCard dictionary.
-    """
+    Genera un código QR con información de contacto. Valida name, phone y email.
 
+    Input esperado:
+    {
+        "name": str,
+        "phone": str,
+        "email": str
+    }
+    """
     def to_internal_value(self, data):
+        if data in (None, ""):
+            raise ValidationError("No se puede generar vCard QR a partir de datos vacíos")
+            
         if not isinstance(data, dict):
-            raise ValidationError("Expected a dictionary for vCard data.")
+            raise ValidationError("Se esperaba un diccionario con credenciales de vCard")
+
+        name = data.get("name")
+        phone = data.get("phone")
+        email = data.get("email")
+
+        if not name or not phone or not email:
+            missing_fields = []
+            if not name:
+                missing_fields.append("name")
+            if not phone:
+                missing_fields.append("phone")
+            if not email:
+                missing_fields.append("email")
+            raise ValidationError(f"Faltan campos obligatorios: {', '.join(missing_fields)}")
+
+        vcard_content = f"BEGIN:VCARD\nVERSION:3.0\nN:{name}\nFN:{name}\nTEL;TYPE=CELL:{phone}\nEMAIL:{email}\nEND:VCARD"
         
-        required_fields = ['name', 'phone', 'email']
-        for field in required_fields:
-            if field not in data or not data[field]:
-                raise ValidationError(f"Missing or empty required field: '{field}'")
-        
-        vcard_string = (
-            f"BEGIN:VCARD\n"
-            f"VERSION:3.0\n"
-            f"FN:{data['name']}\n"
-            f"TEL:{data['phone']}\n"
-            f"EMAIL:{data['email']}\n"
-            f"END:VCARD"
-        )
-        
-        return super().to_internal_value(vcard_string)
+        return super().to_internal_value(vcard_content)

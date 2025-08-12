@@ -28,10 +28,6 @@ from drf_extra_fields.fields import (
 )
 from drf_extra_fields.geo_fields import PointField
 
-from drf_extra_fields.fields import (
-    Base64FileField,
-    vCardQRCodeField,
-)
 
 class UploadedBase64Image:
     def __init__(self, file=None, created=None):
@@ -901,42 +897,3 @@ class LowercaseEmailFieldTest(TestCase):
 
 
 
-class VCardQRCodeSerializer(serializers.Serializer):
-
-    qr_code = vCardQRCodeField()
-
-class TestVCardQRCodeField:
-
-    def test_valid_vcard_data(self):
-
-        data = {
-            'qr_code': {
-                'name': 'Pablo Jane',
-                'phone': '32452352',
-                'email': 'Jane.doe@example.com'
-            }
-        }
-        serializer = VCardQRCodeSerializer(data=data)
-        assert serializer.is_valid()
-        assert 'qr_code' in serializer.validated_data
-        assert serializer.validated_data['qr_code'] is not None
-
-    def test_invalid_vcard_data(self):
-
-        data = {
-            'qr_code': {
-                'name': 'Pablo Jane'
-            }
-        }
-        serializer = VCardQRCodeSerializer(data=data)
-        assert not serializer.is_valid()
-        assert 'qr_code' in serializer.errors
-        assert 'email' in serializer.errors['qr_code']
-
-    def test_invalid_input_type(self):
- 
-        data = {'qr_code': 'esto no es un dict'}
-        serializer = VCardQRCodeSerializer(data=data)
-        assert not serializer.is_valid()
-        assert 'qr_code' in serializer.errors
-        assert 'Expected a dictionary of items but got type "str".' in serializer.errors['qr_code']

@@ -1,36 +1,49 @@
-import qrcode
-from drf_extra_fields.fields import vCardQRCodeField
+import os
+import sys
+import base64
+import argparse
+from io import BytesIO
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "drf_extra_fields.runtests.settings")
+import django
+django.setup()
+
 from rest_framework import serializers
+from drf_extra_fields.fields import vCardQRCodeField
 
-class VCardQRCodeSerializer(serializers.Serializer):
-    qr_code = vCardQRCodeField()
+class VCardSerializer(serializers.Serializer):
+    vcard = vCardQRCodeField()
 
-print("Probando con datos válidos")
-valid_data = {
-    'qr_code': {
-        'name': 'Pablo Jane',
-        'phone': '32452352',
-        'email': 'Jane.doe@example.com'
+def main(argv: list[str]) -> int:
+    parser = argparse.ArgumentParser(
+        description="Genera un QR de vCard y lo imprime en Base64 en la consola",
+    )
+    parser.add_argument("--name", required=True, help="Nombre del contacto")
+    parser.add_argument("--phone", required=True, help="Número de teléfono")
+    parser.add_argument("--email", required=True, help="Correo electrónico")
+
+    args = parser.parse_args(argv)
+
+    payload = {
+        "vcard": {
+            "name": args.name,
+            "phone": args.phone,
+            "email": args.email,
+        }
     }
-}
-serializer = VCardQRCodeSerializer(data=valid_data)
-if serializer.is_valid():
-    print("el validador de datos validos funiona .")
-    print("datos validados:", serializer.validated_data)
-else:
-    print("el validador fallo con datos validos.", serializer.errors)
-print("-" * 30)
 
-print("Probando con datos invalidos")
-invalid_data = {
-    'qr_code': {
-        'name': 'Pablo Jane',
-        'phone': '32452352'
-    }
-}
-serializer = VCardQRCodeSerializer(data=invalid_data)
-if not serializer.is_valid():
-    print("el validador fallo correctamente con datos invalidos.")
-    print("errores de validacion:", serializer.errors)
-else:
-    print("el validador no detecto el error en los datos invalidos.")
+    serializer = VCardSerializer(data=payload)
+    try:
+        serializer.is_valid(raise_exception=True)
+    except Exception as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        return 1
+
+    uploaded_file = serializer.validated_data["vcard"]
+    png_bytes = uploaded_file.read()
+    b64 = base64.b64encode(png_bytes).decode()
+    print(b64)
+    return 0
+
+if __name__ == "__main__":
+    raise SystemExit(main(sys.argv[1:]))
