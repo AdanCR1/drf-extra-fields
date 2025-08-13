@@ -894,3 +894,6 @@ class LowercaseEmailFieldTest(TestCase):
         serializer.is_valid()
         self.assertTrue(serializer.is_valid())
         self.assertEqual(serializer.validated_data['email'], email.lower())
+
+
+

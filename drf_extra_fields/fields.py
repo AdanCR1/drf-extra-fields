@@ -474,3 +474,39 @@ class WiFiQRCodeField(BaseQRCodeField):
 
         wifi_payload = ";".join(parts) + ";;"
         return super().to_internal_value(wifi_payload)
+    
+class vCardQRCodeField(BaseQRCodeField):
+    """
+    Genera un código QR con información de contacto. Valida name, phone y email.
+
+    Input esperado:
+    {
+        "name": str,
+        "phone": str,
+        "email": str
+    }
+    """
+    def to_internal_value(self, data):
+        if data in (None, ""):
+            raise ValidationError("No se puede generar vCard QR a partir de datos vacíos")
+            
+        if not isinstance(data, dict):
+            raise ValidationError("Se esperaba un diccionario con credenciales de vCard")
+
+        name = data.get("name")
+        phone = data.get("phone")
+        email = data.get("email")
+
+        if not name or not phone or not email:
+            missing_fields = []
+            if not name:
+                missing_fields.append("name")
+            if not phone:
+                missing_fields.append("phone")
+            if not email:
+                missing_fields.append("email")
+            raise ValidationError(f"Faltan campos obligatorios: {', '.join(missing_fields)}")
+
+        vcard_content = f"BEGIN:VCARD\nVERSION:3.0\nN:{name}\nFN:{name}\nTEL;TYPE=CELL:{phone}\nEMAIL:{email}\nEND:VCARD"
+        
+        return super().to_internal_value(vcard_content)
