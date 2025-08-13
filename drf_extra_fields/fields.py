@@ -403,3 +403,21 @@ class BaseQRCodeField(ImageField):
 
     def to_representation(self, value):
         return super().to_representation(value)
+    
+    class UrlQRCodeField(BaseQRCodeField):
+    """
+    Campo especializado que genera un QR únicamente para URLs.
+    Valida que la URL comience con http:// o https:// antes de generar el QR.
+    """
+
+    def to_internal_value(self, data):
+        if not data:
+            raise ValidationError("No se puede generar un QR desde una URL vacía.")
+
+        if not isinstance(data, str):
+            raise ValidationError("Se esperaba una cadena de texto (URL).")
+
+        if not data.startswith(("http://", "https://")):
+            raise ValidationError("La URL debe comenzar con 'http://' o 'https://'.")
+
+        return super().to_internal_value(data)
