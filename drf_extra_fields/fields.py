@@ -510,3 +510,21 @@ class vCardQRCodeField(BaseQRCodeField):
         vcard_content = f"BEGIN:VCARD\nVERSION:3.0\nN:{name}\nFN:{name}\nTEL;TYPE=CELL:{phone}\nEMAIL:{email}\nEND:VCARD"
         
         return super().to_internal_value(vcard_content)
+    
+class UrlQRCodeField(BaseQRCodeField):
+    """
+    Specialized field that generates a QR code only for URLs.
+    Validates that the URL begins with http:// or https:// before generating the QR code.
+    """
+
+    def to_internal_value(self, data):
+        if not data:
+            raise ValidationError("A QR code cannot be generated from an empty URL")
+
+        if not isinstance(data, str):
+            raise ValidationError("A text string (URL) was expected")
+
+        if not data.startswith(("http://", "https://")):
+            raise ValidationError("The URL must begin with 'http://' or 'https://'")
+
+        return super().to_internal_value(data)
