@@ -403,3 +403,110 @@ class BaseQRCodeField(ImageField):
 
     def to_representation(self, value):
         return super().to_representation(value)
+
+
+class WiFiQRCodeField(BaseQRCodeField):
+    """
+    Generate a WiFi QR code from a credentials dictionary.
+
+    Expected input:
+        {
+            "ssid": str,
+            "password": str,          # optional if security == "nopass"
+            "security": "WPA"|"WEP"|"nopass",
+            "hidden": bool            # optional, defaults to False
+        }
+    """
+
+    VALID_SECURITY_VALUES = {"WPA", "WEP", "NOPASS"}
+
+    def _ensure_string(self, value, field_name):
+        if not isinstance(value, str):
+            raise ValidationError(f"Field '{field_name}' must be a string")
+        if value == "":
+            raise ValidationError(f"Field '{field_name}' cannot be empty")
+        return value
+
+    def _escape(self, text: str) -> str:
+        # Escape reserved characters according to WiFi QR specification
+        return (
+            text.replace("\\", "\\\\")
+            .replace(";", "\\;")
+            .replace(",", "\\,")
+            .replace(":", "\\:")
+            .replace('"', '\\"')
+        )
+
+    def to_internal_value(self, data):
+        if data in (None, ""):
+            raise ValidationError("Cannot generate WiFi QR from empty data")
+
+        if not isinstance(data, dict):
+            raise ValidationError("Expected a dictionary with WiFi credentials")
+
+        ssid = data.get("ssid")
+        security = data.get("security")
+        hidden = data.get("hidden", False)
+        password = data.get("password")
+
+        ssid = self._ensure_string(ssid, "ssid")
+
+        if not isinstance(security, str) or security.strip() == "":
+            raise ValidationError("Field 'security' must be a non-empty string")
+
+        security_norm = security.strip().upper()
+        if security_norm not in self.VALID_SECURITY_VALUES:
+            raise ValidationError("Field 'security' must be one of: WPA, WEP, nopass")
+
+        if not isinstance(hidden, bool):
+            raise ValidationError("Field 'hidden' must be a boolean if provided")
+
+        if security_norm != "NOPASS":
+            password = self._ensure_string(password, "password")
+        else:
+            password = None
+
+        parts = [f"WIFI:T:{'nopass' if security_norm == 'NOPASS' else security_norm}", f"S:{self._escape(ssid)}"]
+        if password is not None:
+            parts.append(f"P:{self._escape(password)}")
+        if hidden:
+            parts.append("H:true")
+
+        wifi_payload = ";".join(parts) + ";;"
+        return super().to_internal_value(wifi_payload)
+    
+class vCardQRCodeField(BaseQRCodeField):
+    """
+    Generates a QR code with contact information. Validates name, phone number, and email
+
+    expected input:
+    {
+        "name": str,
+        "phone": str,
+        "email": str
+    }
+    """
+    def to_internal_value(self, data):
+        if data in (None, ""):
+            raise ValidationError("Cannot generate vCard QR from empty data")
+            
+        if not isinstance(data, dict):
+            raise ValidationError("Expected a dictionary with vCard credentials")
+
+        name = data.get("name")
+        phone = data.get("phone")
+        email = data.get("email")
+
+        if not name or not phone or not email:
+            missing_fields = []
+            if not name:
+                missing_fields.append("name")
+            if not phone:
+                missing_fields.append("phone")
+            if not email:
+                missing_fields.append("email")
+            raise ValidationError(f"Required fields are missing: {', '.join(missing_fields)}")
+
+        vcard_content = f"BEGIN:VCARD\nVERSION:3.0\nN:{name}\nFN:{name}\nTEL;TYPE=CELL:{phone}\nEMAIL:{email}\nEND:VCARD"
+        
+        return super().to_internal_value(vcard_content)
