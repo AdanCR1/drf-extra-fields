@@ -133,9 +133,10 @@ Deben de ingresar a la carpeta 'test' e ingresar al archivo 'test_fields.py', pa
 ![imagendeFork](IMAGES/CapturaDirecttest.png)
 
 
-![imagendeFork](IMAGES/CapturaDtest.png)
+![imagenDirectorio](IMAGES/directorio_test_unitarios.png)
+Importante establecer que debe existir coordinación entre el grupo B y C ya que las pruebas se harán sobre las funciones creadas.
 
-Importante establecer que debe existir coordinación entre el grupo B y C ya que las pruebas se harán sobre las funciones creadas. 
+Las pruebas unitarias deben reflejar los casos de uso y las expectativas definidas en la documentación.
 
 - Para el GRUPO D
 
@@ -147,40 +148,146 @@ Importante instruir que los cambios debe estar ubicado en la parte final del arc
 
 **Ejemplo de uso para hacer el test (grupo C)**
 
+ Documentación - Test Unitario `BaseQRCodeField`
+
+## Descripción General
+Este documento describe el test unitario implementado para la clase `BaseQRCodeField`, un campo personalizado de **Django REST Framework** que genera códigos QR a partir de texto de entrada.
+
+---
+
+##  Estructura del Test
+**Archivo:** `test_qrbase.py`  
+El test está organizado en una estructura simple y directa que cubre los casos esenciales de uso de la clase `BaseQRCodeField`.
+
+---
+
+##  Dependencias
+
 ```python
-from drf_extra_fields.fields import UrlQRCodeField
-from rest_framework import serializers
-from django.test import TestCase
+import pytest
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.exceptions import ValidationError
-
-
-class UrlQRCodeSerializer(serializers.Serializer):
-    url = UrlQRCodeField()
-
-
-class UrlQRCodeFieldTests(TestCase):
-    def test_valid_url(self):
-        data = {'url': 'https://example.com'}
-        serializer = UrlQRCodeSerializer(data=data)
-        self.assertTrue(serializer.is_valid(), serializer.errors)
-        self.assertEqual(serializer.validated_data['url'], data['url'])
-
-    def test_invalid_url(self):
-        data = {'url': 'not-a-valid-url'}
-        serializer = UrlQRCodeSerializer(data=data)
-        self.assertFalse(serializer.is_valid())
-        self.assertIn('url', serializer.errors)
-
-    def test_blank_url(self):
-        data = {'url': ''}
-        serializer = UrlQRCodeSerializer(data=data)
-        self.assertFalse(serializer.is_valid())
-        self.assertIn('url', serializer.errors)
+from drf_extra_fields.fields import BaseQRCodeField
 ```
 
-Este ejemplo está generado con IA siguiendo el patrón de la clase Base64ImageSerializerTests. Por lo que se recomienda que tomen una parte del codigo del archivo tests/test_fields.py como ejemplo, sigan el mismo enfoque y lo adapten a sus necesidades.
+Dependencias Externas Requeridas:
 
-En el archivo tests/test_fields.py. deben de crear sus nuevas clases siguiendo el patrón de la clase Base64ImageSerializerTests.
+pytest: Framework de testing
+
+Django: Para ValidationError y SimpleUploadedFile
+
+djangorestframework: Framework base
+
+qrcode: Librería para generar códigos QR
+
+pillow: Procesamiento de imágenes
+
+**Componentes del Test**
+Fixture: qr_field
+```python
+@pytest.fixture
+def qr_field():
+    """Fixture para instanciar la clase BaseQRCodeField."""
+    return BaseQRCodeField()
+```
+
+Propósito: Proporciona una instancia reutilizable de BaseQRCodeField para todos los tests.
+Beneficios:
+
+Evita duplicación de código
+
+Garantiza instancia limpia en cada test
+
+Simplifica la escritura de tests
+
+## Test de Caso Exitoso: test_qrcode_field_valid
+```python
+def test_qrcode_field_valid(qr_field):
+    """Caso exitoso: debe generar un archivo PNG válido cuando se le pasa un string."""
+    text = "Hola Gerardo"
+    file = qr_field.to_internal_value(text)
+
+    assert isinstance(file, SimpleUploadedFile)
+    assert file.content_type == "image/png"
+    assert file.name.startswith("qrcode_")
+    assert file.name.endswith(".png")
+    assert file.size > 0
+```
+## test de Validación de Tipo: test_qrcode_field_invalid_type
+```python
+def test_qrcode_field_invalid_type(qr_field):
+    with pytest.raises(ValidationError) as exc_info:
+        qr_field.to_internal_value(12345)
+
+    assert str(exc_info.value) == "['Expected text to generate QR code']"
+```
+
+Objetivo: Rechazar entradas que no sean strings.
+
+Objetivo: Verificar que el campo genere correctamente un código QR válido a partir de texto.
+
+## Test de String Vacío: test_qrcode_field_empty_string
+```python 
+def test_qrcode_field_empty_string(qr_field):
+    with pytest.raises(ValidationError) as exc_info:
+        qr_field.to_internal_value("")
+
+    assert str(exc_info.value) == "['Cannot generate QR code from empty text']"
+``` 
+
+
+Objetivo: Rechazar strings vacíos.
+
+## Cobertura de Testing
+
+Casos Cubiertos:
+
+Generación exitosa de QR code
+
+Validación de tipo
+
+Validación de contenido vacío
+
+# Ejecución de Tests
+## Ejecutar todos los tests
+pytest test_qrbase.py -v
+
+## Ejecutar test específico
+pytest test_qrbase.py::test_qrcode_field_valid -v
+
+## Con output detallado
+pytest test_qrbase.py -v -s
+
+## Con información de coverage
+pytest test_qrbase.py --cov=drf_extra_fields.fields
+
+
+## Salida Esperada:
+
+test_qrbase.py::test_qrcode_field_valid PASSED           [33%]
+test_qrbase.py::test_qrcode_field_invalid_type PASSED    [66%]
+test_qrbase.py::test_qrcode_field_empty_string PASSED   [100%]
+
+======================= 3 passed in 0.42s =======================
+
+## Configuración del Entorno
+
+pytest.ini
+```python
+[pytest]
+DJANGO_SETTINGS_MODULE = drf_extra_fields.runtests.settings
+testpaths = tests
+django_find_project = false
+pythonpath = .
+python_files = test_*.py *_test.py
+```
+
+#    Test Pasando
+
+<img width="1487" height="294" alt="captura_baseqr" src="https://github.com/user-attachments/assets/dc584050-ac6f-401a-adfe-05ed4d549d99" />
+
+
+En el archivo tests/test_qrbase.py deben de crear sus nuevas clases siguiendo el patrón de la clase Base64ImageSerializerTests. La imagen de **test Pasando** es como deberian de lucir sus pruebas.
 
 **Guardar y subir tus cambios**
 
