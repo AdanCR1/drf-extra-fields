@@ -173,7 +173,7 @@ Primero, necesitamos asegurarnos de que Python pueda encontrar este módulo si l
 
 ![imagendeFork](IMAGES/3.png)
 
-4. Si no la encuentras, crea una nueva con el nombre `PYTHONPATH` y en el valor de esa variable, agrega la ruta completa de tu repositorio, como: `C:\PROOOOOII\Nueva capeta 4444\drf-extra-fields`.
+4. Si no la encuentras, crea una nueva con el nombre `PYTHONPATH` y en el valor de esa variable, agrega la ruta completa de tu repositorio, como: `C:\Users\Martha\Documents\drf-extra-fields`.
 
 ![imagendeFork](IMAGES/4.png)
 
