@@ -133,9 +133,10 @@ Deben de ingresar a la carpeta 'test' e ingresar al archivo 'test_fields.py', pa
 ![imagendeFork](IMAGES/CapturaDirecttest.png)
 
 
-![imagendeFork](IMAGES/CapturaDtest.png)
+![imagenDirectorio](IMAGES/directorio_test_unitarios.png)
+Importante establecer que debe existir coordinación entre el grupo B y C ya que las pruebas se harán sobre las funciones creadas.
 
-Importante establecer que debe existir coordinación entre el grupo B y C ya que las pruebas se harán sobre las funciones creadas. 
+Las pruebas unitarias deben reflejar los casos de uso y las expectativas definidas en la documentación.
 
 - Para el GRUPO D
 
@@ -145,38 +146,287 @@ Dirigirse simplemente al archivo 'README.md' para realizar los cambios.
 
 Importante instruir que los cambios debe estar ubicado en la parte final del archivo, antes de CONTRIBUTION.
 
-**Ejemplo de uso para hacer el test**
+----
 
-from drf_extra_fields.fields import UrlQRCodeField
-from rest_framework import serializers
-from django.test import TestCase
+**Ejemplo de uso para configuracion del entorno (PYTHONPATH) (grupo b)**
+
+## Configurar PYTHONPATH
+
+Primero, necesitamos asegurarnos de que Python pueda encontrar este módulo si lo usas en otro proyecto. Aquí te explico cómo configurarlo con los siguientes pasos:
+
+**En Windows:**
+1. Pulsa `Windows + R`, escribe `sysdm.cpl` y presiona Enter.
+
+![imagendeFork](IMAGES/1.png)
+
+2. En la ventana que aparece, ve a la pestaña **Opciones avanzadas** y haz clic en **Variables de entorno**.
+
+![imagendeFork](IMAGES/2.png)
+
+3. Busca una variable llamada `PYTHONPATH` en **Variables del sistema**, si ya lo tienes creada sólo editala y pon aceptar y aceptar.
+
+![imagendeFork](IMAGES/3.png)
+
+4. Si no la encuentras, crea una nueva con el nombre `PYTHONPATH` y en el valor de esa variable, agrega la ruta completa de tu repositorio, como: `C:\Users\Martha\Documents\drf-extra-fields`.
+
+![imagendeFork](IMAGES/4.png)
+
+Haz clic en **Aceptar** y cierra todo.
+
+5. Para verificar si has configurado correctamente la variable de entorno `PYTHONPATH`, ejecuta el siguiente comando.
+
+```bash
+echo $PYTHONPATH
+```
+Si esta todo correcto, deberias ver la ruta que as asignado en el valor de `PYTHONPATH`.
+
+![imagendeFork](IMAGES/5.png)
+
+---
+
+### **Ejemplo de Implementación del Campo QR:**
+
+1. **Crea el Campo QR:**
+
+En este ejemplo usamos una clase llamada vCardQRCodeField que hereda de BaseQRCodeField.
+Lo que hace esta clase es convertir datos de contacto (name, phone, email) en formato vCard y luego generar un código QR en forma de imagen.
+
+Aquí tienes el código de jemplo para probar dentro de un proyecto Django/DRF:
+
+   ```python
+   class vCardQRCodeField(BaseQRCodeField):
+       """
+       Campo que genera un código QR con un diccionario vCard.
+       """
+
+       def to_internal_value(self, data):
+           if not isinstance(data, dict):
+               raise ValidationError("Se esperaba un diccionario para los datos vCard.")
+
+           required_fields = ['name', 'phone', 'email']
+           for field in required_fields:
+               if field not in data or not data[field]:
+                   raise ValidationError(f"Falta o está vacío el campo requerido: '{field}'")
+
+           vcard_string = (
+               f"BEGIN:VCARD\n"
+               f"VERSION:3.0\n"
+               f"FN:{data['name']}\n"
+               f"TEL:{data['phone']}\n"
+               f"EMAIL:{data['email']}\n"
+               f"END:VCARD"
+           )
+
+           return super().to_internal_value(vcard_string)
+   ```
+
+2. **Modificar el Modelo para Guardar la Imagen del QR:**
+   - En el archivo `models.py`, agrega un campo `ImageField` donde se guardará la imagen generada:
+
+   ```python
+   codigo_qr = models.ImageField(upload_to="codigos/", null=True, blank=True)
+   ```
+
+3. **Configurar los Archivos de Medios:**
+   - Para poder guardar y mostrar esas imágenes, configuramos Django para servir archivos multimedia.
+   
+   **En `settings.py` añadimos:**
+
+   ```python
+   MEDIA_URL = "files/"
+   MEDIA_ROOT = BASE_DIR / "files"
+   ```
+    **En `urls.py` agregamos los siguiente:**
+
+ ```bash
+   + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+   ```
+Esto ará que en desarrollo podamos ver las imágenes directamente desde el navegador.
+
+---
+
+## **Uso del Campo QR en el Proyecto**
+
+1. **Agregar el Campo al Serializer:**
+   - En `serializers.py` usamos nuestro campo especial.
+
+   ```python
+   from core.fields import vCardQRCodeField
+
+   class ClienteSerializer(serializers.Serializer):
+       contacto_qr = vCardQRCodeField()
+   ```
+Con esto, cuando llegue la información del cliente, se genera el QR automáticamente.
+
+2. **Levanta el Servidor:**
+   - Ejecutamos:
+
+   ```bash
+   python manage.py makemigrations
+   python manage.py migrate
+   python manage.py runserver
+   ```
+
+3. **Probar la API**
+   - Enviamos un JSON con los datos de un cliente, por ejemplo:
+
+{
+  "contacto_qr": {
+    "name": "Martha",
+    "phone": "75774384",
+    "email": "martha@gmail.com"
+  }
+}
+
+Al hacer la petición, el sistema generará automáticamente el código QR con esos datos.
+
+Finalmente abrimos en el navegador el siguiente enlace http://127.0.0.1:8000/api/nombredelaapi/ y listo, ya tenemos disponible el código QR generado con los datos implementados.
+
+![imagendeFork](IMAGES/ImagenQr.png)
+---
+
+**Ejemplo de uso para hacer el test (grupo C)**
+
+ Documentación - Test Unitario `BaseQRCodeField`
+
+## Descripción General
+Este documento describe el test unitario implementado para la clase `BaseQRCodeField`, un campo personalizado de **Django REST Framework** que genera códigos QR a partir de texto de entrada.
+
+---
+
+##  Estructura del Test
+**Archivo:** `test_qrbase.py`  
+El test está organizado en una estructura simple y directa que cubre los casos esenciales de uso de la clase `BaseQRCodeField`.
+
+---
+
+##  Dependencias
+
+```python
+import pytest
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.exceptions import ValidationError
+from drf_extra_fields.fields import BaseQRCodeField
+```
+
+Dependencias Externas Requeridas:
+
+pytest: Framework de testing
+
+Django: Para ValidationError y SimpleUploadedFile
+
+djangorestframework: Framework base
+
+qrcode: Librería para generar códigos QR
+
+pillow: Procesamiento de imágenes
+
+**Componentes del Test**
+Fixture: qr_field
+```python
+@pytest.fixture
+def qr_field():
+    """Fixture para instanciar la clase BaseQRCodeField."""
+    return BaseQRCodeField()
+```
+
+Propósito: Proporciona una instancia reutilizable de BaseQRCodeField para todos los tests.
+Beneficios:
+
+Evita duplicación de código
+
+Garantiza instancia limpia en cada test
+
+Simplifica la escritura de tests
+
+## Test de Caso Exitoso: test_qrcode_field_valid
+```python
+def test_qrcode_field_valid(qr_field):
+    """Caso exitoso: debe generar un archivo PNG válido cuando se le pasa un string."""
+    text = "Hola Gerardo"
+    file = qr_field.to_internal_value(text)
+
+    assert isinstance(file, SimpleUploadedFile)
+    assert file.content_type == "image/png"
+    assert file.name.startswith("qrcode_")
+    assert file.name.endswith(".png")
+    assert file.size > 0
+```
+## test de Validación de Tipo: test_qrcode_field_invalid_type
+```python
+def test_qrcode_field_invalid_type(qr_field):
+    with pytest.raises(ValidationError) as exc_info:
+        qr_field.to_internal_value(12345)
+
+    assert str(exc_info.value) == "['Expected text to generate QR code']"
+```
+
+Objetivo: Rechazar entradas que no sean strings.
+
+Objetivo: Verificar que el campo genere correctamente un código QR válido a partir de texto.
+
+## Test de String Vacío: test_qrcode_field_empty_string
+```python 
+def test_qrcode_field_empty_string(qr_field):
+    with pytest.raises(ValidationError) as exc_info:
+        qr_field.to_internal_value("")
+
+    assert str(exc_info.value) == "['Cannot generate QR code from empty text']"
+``` 
 
 
-class UrlQRCodeSerializer(serializers.Serializer):
-    url = UrlQRCodeField()
+Objetivo: Rechazar strings vacíos.
+
+## Cobertura de Testing
+
+Casos Cubiertos:
+
+Generación exitosa de QR code
+
+Validación de tipo
+
+Validación de contenido vacío
+
+# Ejecución de Tests
+## Ejecutar todos los tests
+pytest test_qrbase.py -v
+
+## Ejecutar test específico
+pytest test_qrbase.py::test_qrcode_field_valid -v
+
+## Con output detallado
+pytest test_qrbase.py -v -s
+
+## Con información de coverage
+pytest test_qrbase.py --cov=drf_extra_fields.fields
 
 
-class UrlQRCodeFieldTests(TestCase):
-    def test_valid_url(self):
-        data = {'url': 'https://example.com'}
-        serializer = UrlQRCodeSerializer(data=data)
-        self.assertTrue(serializer.is_valid(), serializer.errors)
-        self.assertEqual(serializer.validated_data['url'], data['url'])
+## Salida Esperada:
 
-    def test_invalid_url(self):
-        data = {'url': 'not-a-valid-url'}
-        serializer = UrlQRCodeSerializer(data=data)
-        self.assertFalse(serializer.is_valid())
-        self.assertIn('url', serializer.errors)
+test_qrbase.py::test_qrcode_field_valid PASSED           [33%]
+test_qrbase.py::test_qrcode_field_invalid_type PASSED    [66%]
+test_qrbase.py::test_qrcode_field_empty_string PASSED   [100%]
 
-    def test_blank_url(self):
-        data = {'url': ''}
-        serializer = UrlQRCodeSerializer(data=data)
-        self.assertFalse(serializer.is_valid())
-        self.assertIn('url', serializer.errors)
+======================= 3 passed in 0.42s =======================
 
-En el archivo tests/test_fields.py. deben de crear sus nuevas clases siguiendo el patrón de la clase Base64ImageSerializerTests.
+## Configuración del Entorno
+
+pytest.ini
+```python
+[pytest]
+DJANGO_SETTINGS_MODULE = drf_extra_fields.runtests.settings
+testpaths = tests
+django_find_project = false
+pythonpath = .
+python_files = test_*.py *_test.py
+```
+
+#    Test Pasando
+
+<img width="1487" height="294" alt="captura_baseqr" src="https://github.com/user-attachments/assets/dc584050-ac6f-401a-adfe-05ed4d549d99" />
+
+
+En el archivo tests/test_qrbase.py deben de crear sus nuevas clases siguiendo el patrón de la clase Base64ImageSerializerTests. La imagen de **test Pasando** es como deberian de lucir sus pruebas.
 
 **Guardar y subir tus cambios**
 
@@ -211,12 +461,22 @@ b).- Desde la raíz del proyecto (drf-extra-fields), crea un archivo momentaneo 
 
 Si las pruebas fallan, arréglalas y vuelve a ejecutar el comanado hasta que pasen todas correctamente.
 
+## 6.1 Enviar imagen de Validación
+
+En la carpeta `docs/IMAGES`, guarda una captura de pantalla que valide tu implementación.
+
+![imagen de validación](IMAGES/Capturadirectorio.jpg)
+
+El nombre del archivo imagen debe ser asi: `Adan_Cap_validacion.jpg`
+Primero tu nombre y luego Cap_validacion. Esto con la finalidad de identificar fácilmente la captura de pantalla (OJO, no se aceptará el pull request sin la captura de validacion).
+La captura de pantalla debe mostrar claramente la funcionalidad que has implementado o modificado.
+
 ## 7. Crear un Pull Request (PR)
 
 1. Ve a: https://github.com/AdanCR1/drf-extra-fields/pulls
 2. Haz clic en **"New Pull Request"**
 3. Configura así:
-   - base: `maestro`
+   - base: `master`
    - compare: `tu-rama`
 
 Ambas ramas deben ser del repositorio `AdanCR1/drf-extra-fields`.
@@ -236,11 +496,11 @@ Y haz clic en **"Create pull request"** para enviar tu contribución a revisión
 Ejecuta el siguiente comando periódicamente:
 
 ```bash
-git pull origin maestro
+git pull origin master
 ```
 
 ## Notas
 
 - Asegúrate de estar en el repositorio correcto (`AdanCR1/drf-extra-fields`) al crear el PR.
-- Describe claramente los cambios en tu Pull Request.
-- Para los que van a implementar, después de que hagan las pruebas, deben sacar Captura de pantalla y ponerlos dentro la carpeta 'Imagenes', que se encuentra ubicado dentro de la carpeta 'docs', y ponerlo con su nombre personal para mayor presición hacia la revisión.
+- Describe claramente los cambios en tu Pull Request, un titulo claro y una descripción breve.
+- Ante cualquier duda o consulta, contacta con cualquier miembro del grupo A.
