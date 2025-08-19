@@ -519,3 +519,186 @@ Unless required by applicable law or agreed to in writing, software distributed
 under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
+
+
+
+
+
+
+
+
+
+# INTEGRACION DRF + QR codes.
+
+La Integracion Django REST Framework (DRF) con campos personalizados que permiten generar códigos QR automáticamente a partir de datos enviados en formato JSON.
+
+Se utilizan los campos personalizados del paquete drf-extra-fields:
+
+    UrlQRCodeField → genera QR de una URL.
+
+    WiFiQRCodeField → genera QR con credenciales de red Wi-Fi.
+
+    vCardQRCodeField → genera QR con datos de contacto en formato vCard.
+
+De esta manera, el cliente envía datos en formato JSON y recibe como resultado un recurso que incluye la imagen QR en formato PNG, lista para usarse o escanearse.
+
+# ARQUITECTURA DE LA INTEGRACION
+
+La integración sigue una arquitectura típica DRF:
+
+* Models (/models.py) → definen la estructura de los datos, incluyendo un campo ImageField donde se guarda el PNG generado.
+
+* Serializers (/serializers.py) → reciben datos JSON, validan y convierten los campos QR en imágenes PNG automáticamente.
+
+* Views (/views.py) → exponen endpoints CRUD usando ModelViewSet.
+
+* URLs (/urls.py) → definen las rutas accesibles vía API con DefaultRouter.
+
+* Settings (/settings.py) → configuran dónde se almacenan los archivos multimedia (MEDIA_ROOT y MEDIA_URL).
+
+# EXPLICACION DETALLADA POR MODULO
+
+* MODELS
+
+```python
+class Negocio(models.Model):
+    ...
+    url_qr = models.ImageField(upload_to='qr_codes/', blank=True, null=True)
+
+class Universidad(models.Model):
+    ...
+    wifi_qr = models.ImageField(upload_to='qr_codes/', blank=True, null=True)
+
+class Contacto(models.Model):
+    ...
+    vcard_qr = models.ImageField(upload_to='qr_codes/', blank=True, null=True)
+
+```
+    Cada modelo tiene un ImageField (url_qr, wifi_qr, vcard_qr).
+
+    Este campo no se llena manualmente: lo llena el serializer al convertir el input en QR.
+
+    upload_to='qr_codes/' asegura que todos los PNG se guarden en la carpeta files/qr_codes/.
+
+- SERIALIZERS 
+
+```python
+class NegocioSerializer(serializers.ModelSerializer):
+    url_qr = UrlQRCodeField()
+
+class UniversidadSerializer(serializers.ModelSerializer):
+    wifi_qr = WiFiQRCodeField()
+
+class ContactoSerializer(serializers.ModelSerializer):
+    vcard_qr = vCardQRCodeField()
+```
+Los serializers hacen la “magia”:
+
+    1. Validan los datos recibidos.
+        Ejemplo: 
+
+        UrlQRCodeField exige que la URL comience con http:// o https://.
+
+        WiFiQRCodeField valida que se envíen ssid, password, security y hidden.
+
+        vCardQRCodeField exige name, phone y email.
+
+    2. Generan el código QR.
+        Internamente usan la librería qrcode para crear un PNG en memoria.
+
+    3. Lo transforman en un archivo (SimpleUploadedFile).
+        Este archivo es asignado al campo ImageField del modelo.
+
+    4. Guardan la instancia.
+        El archivo queda disponible físicamente en MEDIA_ROOT.
+
+- VIEWS
+
+```python
+class NegocioViewSet(ModelViewSet):
+    queryset = Negocio.objects.all()
+    serializer_class = NegocioSerializer
+```
+    ModelViewSet provee endpoints listos (GET, POST, PUT, DELETE).
+
+    Al hacer un POST, se ejecuta el serializer → se genera el QR → se guarda.
+
+    Al hacer un GET, se devuelve la URL relativa de la imagen.
+
+- URLS
+
+```python
+router.register(r'negocio', NegocioViewSet, basename='negocio')
+router.register(r'universidad', UniversidadViewSet, basename='universidad')
+router.register(r'contacto', ContactoViewSet, basename='contacto')
+```
+Endpoints finales:
+
+    /api/negocio/ → QRs de URLs.
+
+    /api/universidad/ → QRs de WiFi.
+
+    /api/contacto/ → QRs de vCards.
+
+
+- SETTINGS
+
+```python
+MEDIA_URL = "/files/"
+MEDIA_ROOT = BASE_DIR / "files"
+```
+    MEDIA_ROOT: ruta real en el disco donde se almacenan los PNG.
+
+    MEDIA_URL: URL desde la que se accede a esos archivos.
+
+    Durante el desarrollo, urls.py usa static() para exponerlos.
+
+# EJEMPLOS DE USO
+
+    Al acceder a la URL:  http://127.0.0.1:8000/api/
+    se despliega la interfaz navegable de Django REST Framework.
+
+![imagendeFork](docs/IMAGES/CAP_INTEGRACION_0.png)
+
+    En esta pantalla aparecen los endpoints registrados en el router:
+
+        /api/negocio/ → gestión de negocios con QR de URL
+
+        /api/universidad/ → gestión de universidades con QR de WiFi
+
+        /api/contacto/ → gestión de contactos con QR en formato vCard
+
+ - URL -> QR
+    Muestra el formulario en la interfaz de DRF antes de presionar POST. Aquí se introducen los datos del negocio (nombre, dirección, teléfono) y la URL que se convertirá en código QR.
+
+![imagendeFork](docs/IMAGES/CAP_INTEGRACION_1.png)
+
+    Muestra la respuesta de la API después de presionar POST.
+    Los mismos datos aparecen en el resultado junto con el campo url_qr, que ahora contiene la ruta al archivo PNG generado. Ese archivo es el código QR que puede ser escaneado con un celular.
+
+![imagendeFork](docs/IMAGES/CAP_INTEGRACION_2.png)
+
+![imagendeFork](docs/IMAGES/CAP_INTEGRACION_3.png)
+
+ * WIFI -> QR
+
+    Se ingresan los datos de la red WiFi: ssid, password, tipo de seguridad (WPA, WEP o nopass) y el resto de información de la universidad. Todo esto se hace antes de ejecutar el POST.
+
+![imagendeFork](docs/IMAGES/CAP_INTEGRACION_1.1.png)
+
+    Tras enviar el POST, la API devuelve los datos guardados y un campo wifi_qr que contiene la ubicación del PNG generado. Al escanear ese QR, un dispositivo puede conectarse automáticamente a la red WiFi configurada.
+
+![imagendeFork](docs/IMAGES/CAP_INTEGRACION_1.2.png)
+
+ * VCARD -> QR
+
+    Se completan los campos de contacto (name, phone, email) junto con los datos de la persona. Esta captura corresponde al estado antes de enviar la petición POST.
+
+ ![imagendeFork](docs/IMAGES/CAP_INTEGRACION_2.1.png)
+
+    Después del POST, la API devuelve el registro completo con un campo vcard_qr. Este QR contiene toda la información en formato vCard y, al escanearlo, el celular ofrece guardar el contacto directamente en la agenda.
+    
+ ![imagendeFork](docs/IMAGES/CAP_INTEGRACION_2.2.png)
+
+
+
