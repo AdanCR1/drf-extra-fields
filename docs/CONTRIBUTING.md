@@ -146,6 +146,144 @@ Dirigirse simplemente al archivo 'README.md' para realizar los cambios.
 
 Importante instruir que los cambios debe estar ubicado en la parte final del archivo, antes de CONTRIBUTION.
 
+----
+
+**Ejemplo de uso para configuracion del entorno (PYTHONPATH) (grupo b)**
+
+## Configurar PYTHONPATH
+
+Primero, necesitamos asegurarnos de que Python pueda encontrar este módulo si lo usas en otro proyecto. Aquí te explico cómo configurarlo con los siguientes pasos:
+
+**En Windows:**
+1. Pulsa `Windows + R`, escribe `sysdm.cpl` y presiona Enter.
+
+![imagendeFork](IMAGES/1.png)
+
+2. En la ventana que aparece, ve a la pestaña **Opciones avanzadas** y haz clic en **Variables de entorno**.
+
+![imagendeFork](IMAGES/2.png)
+
+3. Busca una variable llamada `PYTHONPATH` en **Variables del sistema**, si ya lo tienes creada sólo editala y pon aceptar y aceptar.
+
+![imagendeFork](IMAGES/3.png)
+
+4. Si no la encuentras, crea una nueva con el nombre `PYTHONPATH` y en el valor de esa variable, agrega la ruta completa de tu repositorio, como: `C:\Users\Martha\Documents\drf-extra-fields`.
+
+![imagendeFork](IMAGES/4.png)
+
+Haz clic en **Aceptar** y cierra todo.
+
+5. Para verificar si has configurado correctamente la variable de entorno `PYTHONPATH`, ejecuta el siguiente comando.
+
+```bash
+echo $PYTHONPATH
+```
+Si esta todo correcto, deberias ver la ruta que as asignado en el valor de `PYTHONPATH`.
+
+![imagendeFork](IMAGES/5.png)
+
+---
+
+### **Ejemplo de Implementación del Campo QR:**
+
+1. **Crea el Campo QR:**
+
+En este ejemplo usamos una clase llamada vCardQRCodeField que hereda de BaseQRCodeField.
+Lo que hace esta clase es convertir datos de contacto (name, phone, email) en formato vCard y luego generar un código QR en forma de imagen.
+
+Aquí tienes el código de jemplo para probar dentro de un proyecto Django/DRF:
+
+   ```python
+   class vCardQRCodeField(BaseQRCodeField):
+       """
+       Campo que genera un código QR con un diccionario vCard.
+       """
+
+       def to_internal_value(self, data):
+           if not isinstance(data, dict):
+               raise ValidationError("Se esperaba un diccionario para los datos vCard.")
+
+           required_fields = ['name', 'phone', 'email']
+           for field in required_fields:
+               if field not in data or not data[field]:
+                   raise ValidationError(f"Falta o está vacío el campo requerido: '{field}'")
+
+           vcard_string = (
+               f"BEGIN:VCARD\n"
+               f"VERSION:3.0\n"
+               f"FN:{data['name']}\n"
+               f"TEL:{data['phone']}\n"
+               f"EMAIL:{data['email']}\n"
+               f"END:VCARD"
+           )
+
+           return super().to_internal_value(vcard_string)
+   ```
+
+2. **Modificar el Modelo para Guardar la Imagen del QR:**
+   - En el archivo `models.py`, agrega un campo `ImageField` donde se guardará la imagen generada:
+
+   ```python
+   codigo_qr = models.ImageField(upload_to="codigos/", null=True, blank=True)
+   ```
+
+3. **Configurar los Archivos de Medios:**
+   - Para poder guardar y mostrar esas imágenes, configuramos Django para servir archivos multimedia.
+   
+   **En `settings.py` añadimos:**
+
+   ```python
+   MEDIA_URL = "files/"
+   MEDIA_ROOT = BASE_DIR / "files"
+   ```
+    **En `urls.py` agregamos los siguiente:**
+
+ ```bash
+   + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+   ```
+Esto ará que en desarrollo podamos ver las imágenes directamente desde el navegador.
+
+---
+
+## **Uso del Campo QR en el Proyecto**
+
+1. **Agregar el Campo al Serializer:**
+   - En `serializers.py` usamos nuestro campo especial.
+
+   ```python
+   from core.fields import vCardQRCodeField
+
+   class ClienteSerializer(serializers.Serializer):
+       contacto_qr = vCardQRCodeField()
+   ```
+Con esto, cuando llegue la información del cliente, se genera el QR automáticamente.
+
+2. **Levanta el Servidor:**
+   - Ejecutamos:
+
+   ```bash
+   python manage.py makemigrations
+   python manage.py migrate
+   python manage.py runserver
+   ```
+
+3. **Probar la API**
+   - Enviamos un JSON con los datos de un cliente, por ejemplo:
+
+{
+  "contacto_qr": {
+    "name": "Martha",
+    "phone": "75774384",
+    "email": "martha@gmail.com"
+  }
+}
+
+![imagendeFork](IMAGES/5.png)
+
+y abrimos el siguiente enlace http://127.0.0.1:8000/api/nombredelaapi/ ya tenemos la el QR generado con los datos implementados.
+
+---
+
 **Ejemplo de uso para hacer el test (grupo C)**
 
  Documentación - Test Unitario `BaseQRCodeField`
