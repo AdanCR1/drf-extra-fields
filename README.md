@@ -482,6 +482,77 @@ class EmailSerializer(serializers.Serializer):
 
 ```
 
+<hr>
+
+## QRfiles
+
+we add QRfiles to show that thisn library have more use
+
+## BaseQRCodeField
+
+`BaseQRCodeField` inherist to `ImageField`
+Field for generating QR codes from text input.
+Receives text from client and converts it to QR code image.
+the four next class inherist this class `BaseQRCodeField`
+
+```python
+class BaseQRCodeField(ImageField):
+
+```
+
+![WiFiQRCodeField](https://github.com/AdanCR1/drf-extra-fields/blob/11796aa12d83b36e4bc4d078aca68446fecbbadd/docs/IMAGES/Gerardo_Cap_Validacion.jpg)
+
+<rh>
+
+# WiFiQRCodeField
+
+`WiFiQRCodeField` inherist `BaseQRCodeField`
+Generate a WiFi QR code from a credentials dictionary.
+
+```python
+class WiFiQRCodeField(BaseQRCodeField):
+```
+
+````py
+
+
+    Expected input:
+        {
+            "ssid": str,
+            "password": str,          # optional if security == "nopass"
+            "security": "WPA"|"WEP"|"nopass",
+            "hidden": bool            # optional, defaults to False
+        }
+        ```
+
+![WiFiQRCodeField](https://github.com/AdanCR1/drf-extra-fields/blob/11796aa12d83b36e4bc4d078aca68446fecbbadd/docs/IMAGES/Jorge_Cap_validacion.png)
+
+<hr>
+
+## vCardQRCodeField
+
+Generates a QR code with contact information. Validates name, phone number, and email
+`vCardQRCodeField
+
+```py
+class vCardQRCodeField(BaseQRCodeField):
+````
+
+```py
+
+    expected input:
+    {
+        "name": str,
+        "phone": str,
+        "email": str
+    }
+```
+
+![vCardQRCodeField](https://github.com/AdanCR1/drf-extra-fields/blob/11796aa12d83b36e4bc4d078aca68446fecbbadd/docs/IMAGES/Mary_Cap_validacion.jpg)
+
+![]()
+![]()
+
 # CONTRIBUTION
 
 **TESTS**
