@@ -14,7 +14,7 @@ This document explains how to clone the repository, create branches, set up the 
 
 Create a Fork of the original repository in your GitHub account. This will allow you to work on your own copy of the project without affecting the main repository. Go to your fork's page and click on 'Code' to copy the repository link.
 
-![imagendeFork](IMAGES/Captura1enlace.png)
+![imagendeFork](../docs/IMAGES/Captura1enlace.png)
 
 Once copied, create a folder and inside clone your Fork with the following command:
 
@@ -74,17 +74,17 @@ First, we need to make sure that Python can find this module if you use it in an
 
 1. Press `Windows + R`, type `sysdm.cpl` and press Enter.
 
-![imagendeFork](IMAGES/1.png)
+![imagendeFork](../docs/IMAGES/1.png)
 
 2. In the window that appears, go to the **Advanced** tab and click on **Environment Variables**.
 
-![imagendeFork](IMAGES/2.png)
+![imagendeFork](../docs/IMAGES/2.png)
 
 3. Look for a variable called `PYTHONPATH` in **System Variables**. If you already have it created, just edit it and click OK and OK.
 
 4. If you don't find it, create a new one named `PYTHONPATH` and in the value of that variable, add the full path to your repository, such as: `C:\Users\Martha\Documents\drf-extra-fields`.
 
-![imagendeFork](IMAGES/3.png)
+![imagendeFork](../docs/IMAGES/3.png)
 
 Click **OK** and close everything.
 
@@ -96,7 +96,7 @@ echo $PYTHONPATH
 
 If everything is correct, you should see the path you assigned in the value of `PYTHONPATH`.
 
-![imagendeFork](IMAGES/4.png)
+![imagendeFork](../docs/IMAGES/4.png)
 
 Note: With the `PYTHONPATH` environment variable configured, Python will be able to find the `drf_extra_fields` module from any project you are working on. This is useful if you want to use the implemented fields in a test project or another project without having to install it as a package.
 
@@ -205,7 +205,7 @@ python manage.py runserver
 
 When making the request, the system will automatically generate the QR code with that data. Finally, open the following link in your browser http://127.0.0.1:8000/api/api-name/ and that's it, you now have the QR code generated with the implemented data available.
 
-## ![imagendeFork](IMAGES/ImagenQr.png)
+## ![imagendeFork](../docs/IMAGES/ImagenQr.png)
 
 ---
 
