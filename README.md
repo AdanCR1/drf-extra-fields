@@ -484,6 +484,9 @@ class EmailSerializer(serializers.Serializer):
 
 # CONTRIBUTION
 
+Look at the [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) file for contribution
+guidelines.
+
 **TESTS**
 
 - Make sure that you add the test for contributed field to test/test_fields.py
