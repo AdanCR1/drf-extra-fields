@@ -513,8 +513,7 @@ Generate a WiFi QR code from a credentials dictionary.
 class WiFiQRCodeField(BaseQRCodeField):
 ```
 
-````py
-
+```py
 
     Expected input:
         {
@@ -523,7 +522,7 @@ class WiFiQRCodeField(BaseQRCodeField):
             "security": "WPA"|"WEP"|"nopass",
             "hidden": bool            # optional, defaults to False
         }
-        ```
+```
 
 ![WiFiQRCodeField](https://github.com/AdanCR1/drf-extra-fields/blob/11796aa12d83b36e4bc4d078aca68446fecbbadd/docs/IMAGES/Jorge_Cap_validacion.png)
 
@@ -532,11 +531,11 @@ class WiFiQRCodeField(BaseQRCodeField):
 ## vCardQRCodeField
 
 Generates a QR code with contact information. Validates name, phone number, and email
-`vCardQRCodeField
+`vCardQRCodeField`
 
 ```py
 class vCardQRCodeField(BaseQRCodeField):
-````
+```
 
 ```py
 
