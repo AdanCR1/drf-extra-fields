@@ -550,9 +550,6 @@ class vCardQRCodeField(BaseQRCodeField):
 
 ![vCardQRCodeField](https://github.com/AdanCR1/drf-extra-fields/blob/11796aa12d83b36e4bc4d078aca68446fecbbadd/docs/IMAGES/Mary_Cap_validacion.jpg)
 
-![]()
-![]()
-
 # CONTRIBUTION
 
 **TESTS**
