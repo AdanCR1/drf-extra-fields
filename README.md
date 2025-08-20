@@ -531,7 +531,7 @@ class WiFiQRCodeField(BaseQRCodeField):
 ## vCardQRCodeField
 
 Generates a QR code with contact information. Validates name, phone number, and email
-`vCardQRCodeField`
+`vCardQRCodeField` inherist `BaseQRCodeField`
 
 ```py
 class vCardQRCodeField(BaseQRCodeField):
@@ -589,15 +589,3 @@ Unless required by applicable law or agreed to in writing, software distributed
 under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
-
-
-
-
-
-
-
-
-
-
-
-
