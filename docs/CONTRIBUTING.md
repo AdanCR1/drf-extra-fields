@@ -1,157 +1,129 @@
-# Guía Técnica para Contribuir en el proyecto drf-extra-fields
+# Technical Guide for Contributing to the drf-extra-fields Project
 
-Este documento explica desde cómo clonar el repositorio, crear ramas, configurar
-el entorno de desarrollo, ejecutar pruebas y realizar Pull Requests. Sigue estos
-pasos para que tu contribución sea sencilla, efectiva y alineada con las buenas
-prácticas del proyecto.
-
-Por el momento, este documento está en español, pero se espera que la comunidad
-contribuya a su traducción al inglés y otros idiomas.
+This document explains how to clone the repository, create branches, set up the development environment, run tests, and make Pull Requests. Follow these steps to make your contribution simple, effective, and aligned with the project's best practices.
 
 ---
 
 ---
 
-# **Cómo configurar tu entorno de desarrollo**
+# **How to Set Up Your Development Environment**
 
-## 1. Crear un Fork y clonar el repositorio
+## 1. Fork and Clone the Repository
 
-**Este paso es muy importante para la contribución.**
+**This step is very important for contributing.**
 
-Crea un Fork del repositorio original en tu cuenta de GitHub. Esto te permitirá
-trabajar en tu propia copia del proyecto sin afectar el repositorio principal.
-Ingresa a la pagina de tu fork y dale clic en 'Code' para copiar el enlace del
-repositorio.
+Create a Fork of the original repository in your GitHub account. This will allow you to work on your own copy of the project without affecting the main repository. Go to your fork's page and click on 'Code' to copy the repository link.
 
 ![imagendeFork](IMAGES/Captura1enlace.png)
 
-Una vez copiado, crea una carpeta y dentro clona tu Fork con el siguiente
-comando:
+Once copied, create a folder and inside clone your Fork with the following command:
 
 ```bash
 git clone https://github.com/[username]/drf-extra-fields.git
 ```
 
-## 2. Ingresar al directorio del proyecto
+## 2. Enter the Project Directory
 
-Ingresa al directorio del proyecto para comenzar a trabajar dentro de él con el
-siguiente comando:
+Enter the project directory to start working inside it with the following command:
 
 ```bash
 cd drf-extra-fields
 ```
 
-## 2.1 Crea una rama de desarrollo desde master con el nombre de la característica o tarea que te corresponde (Opcional)
+## 2.1 Create a Development Branch from Master with the Name of the Feature or Task Assigned to You (Optional)
 
 ```bash
-git checkout -b nombre-de-tu-rama
+git checkout -b your-branch-name
 ```
 
-## 3. Crear y activar el entorno virtual para aislar las dependencias del proyecto
+## 3. Create and Activate the Virtual Environment to Isolate Project Dependencies
 
-Para crear:
+To create:
 
 ```bash
 python -m venv venv
 ```
 
-Para activar:
+To activate:
 
-- **En Windows:**
+- **On Windows:**
 
   ```bash
   .\venv\Scripts\activate
   ```
 
-- **En macOS/Linux:**
+- **On macOS/Linux:**
 
   ```bash
   source venv/bin/activate
   ```
 
-## 4. Instalar dependencias
+## 4. Install Dependencies
 
 ```bash
 pip install -r requirements_dev.txt
 ```
 
-**Como probar tu implementación - Ejemplo de uso para configuracion del entorno
-(PYTHONPATH)**
+**How to Test Your Implementation - Example Usage for Environment Configuration (PYTHONPATH)**
 
-## 5. Configurar PYTHONPATH
+## 5. Configure PYTHONPATH
 
-Primero, necesitamos asegurarnos de que Python pueda encontrar este módulo si lo
-usas en otro proyecto. Aquí te explico cómo configurarlo con los siguientes
-pasos:
+First, we need to make sure that Python can find this module if you use it in another project. Here I explain how to configure it with the following steps:
 
-**En Windows:**
+**On Windows:**
 
-1. Pulsa `Windows + R`, escribe `sysdm.cpl` y presiona Enter.
+1. Press `Windows + R`, type `sysdm.cpl` and press Enter.
 
 ![imagendeFork](IMAGES/1.png)
 
-2. En la ventana que aparece, ve a la pestaña **Opciones avanzadas** y haz clic
-   en **Variables de entorno**.
+2. In the window that appears, go to the **Advanced** tab and click on **Environment Variables**.
 
 ![imagendeFork](IMAGES/2.png)
 
-3. Busca una variable llamada `PYTHONPATH` en **Variables del sistema**, si ya
-   lo tienes creada sólo editala y pon aceptar y aceptar.
+3. Look for a variable called `PYTHONPATH` in **System Variables**. If you already have it created, just edit it and click OK and OK.
 
-4. Si no la encuentras, crea una nueva con el nombre `PYTHONPATH` y en el valor
-   de esa variable, agrega la ruta completa de tu repositorio, como:
-   `C:\Users\Martha\Documents\drf-extra-fields`.
+4. If you don't find it, create a new one named `PYTHONPATH` and in the value of that variable, add the full path to your repository, such as: `C:\Users\Martha\Documents\drf-extra-fields`.
 
 ![imagendeFork](IMAGES/3.png)
 
-Haz clic en **Aceptar** y cierra todo.
+Click **OK** and close everything.
 
-5. Para verificar si has configurado correctamente la variable de entorno
-   `PYTHONPATH`, ejecuta el siguiente comando.
+5. To verify if you have correctly configured the `PYTHONPATH` environment variable, run the following command.
 
 ```bash
 echo $PYTHONPATH
 ```
 
-Si esta todo correcto, deberias ver la ruta que as asignado en el valor de
-`PYTHONPATH`.
+If everything is correct, you should see the path you assigned in the value of `PYTHONPATH`.
 
 ![imagendeFork](IMAGES/4.png)
 
-Nota: Con la variable de entorno `PYTHONPATH` configurada, Python podrá
-encontrar el módulo `drf_extra_fields` desde cualquier proyecto que estés
-trabajando. Esto es útil si quieres utilizar los campos implementados en un
-proyecto de prueba o en otro proyecto sin tener que instalarlo como un paquete.
+Note: With the `PYTHONPATH` environment variable configured, Python will be able to find the `drf_extra_fields` module from any project you are working on. This is useful if you want to use the implemented fields in a test project or another project without having to install it as a package.
 
 ---
 
-# **Cómo implementar un campo personalizado: Ejemplo con Códigos QR**
+# **How to Implement a Custom Field: Example with QR Codes**
 
-Este es un ejemplo de cómo se realizaría la implementación de un campo
-personalizado para la generación de códigos QR y cómo usarlo en una
-implementación real con Django/DRF.
+This is an example of how to implement a custom field for QR code generation and how to use it in a real implementation with Django/DRF.
 
-## 1. Crea el Campo QR:
+## 1. Create the QR Field:
 
-En este ejemplo usamos una clase llamada vCardQRCodeField que hereda de
-BaseQRCodeField. Lo que hace esta clase es convertir datos de contacto (name,
-phone, email) en formato vCard y luego generar un código QR en forma de imagen,
-implementado en el archivo `drf_extra_fields/fields.py`.
+In this example, we use a class called vCardQRCodeField that inherits from BaseQRCodeField. What this class does is convert contact data (name, phone, email) into vCard format and then generate a QR code as an image, implemented in the file `drf_extra_fields/fields.py`.
 
 ```python
 class vCardQRCodeField(BaseQRCodeField):
     """
-    Campo que genera un código QR con un diccionario vCard.
+    Field that generates a QR code with a vCard dictionary.
     """
 
     def to_internal_value(self, data):
         if not isinstance(data, dict):
-            raise ValidationError("Se esperaba un diccionario para los datos vCard.")
+            raise ValidationError("A dictionary was expected for vCard data.")
 
         required_fields = ['name', 'phone', 'email']
         for field in required_fields:
             if field not in data or not data[field]:
-                raise ValidationError(f"Falta o está vacío el campo requerido: '{field}'")
+                raise ValidationError(f"Missing or empty required field: '{field}'")
 
         vcard_string = (
             f"BEGIN:VCARD\n"
@@ -165,49 +137,46 @@ class vCardQRCodeField(BaseQRCodeField):
         return super().to_internal_value(vcard_string)
 ```
 
-## 2. Crear un proyecto Django para probar el campo QR:
+## 2. Create a Django Project to Test the QR Field:
 
-- Crea un proyecto Django y una aplicación llamada `core`.
+- Create a Django project and an app called `core`.
 
 ```bash
-django-admin startproject mi_proyecto
-cd mi_proyecto
+django-admin startproject my_project
+cd my_project
 python manage.py startapp core
 ```
 
-## 3. Crear un Modelo para guardar la imagen del QR:
+## 3. Create a Model to Save the QR Image:
 
-- En el archivo `core/models.py`, agrega un campo `ImageField` donde se guardará
-  la imagen generada:
+- In the file `core/models.py`, add an `ImageField` where the generated image will be saved:
 
 ```python
 codigo_qr = models.ImageField(upload_to="codigos/", null=True, blank=True)
 ```
 
-## 4. Configurar los Archivos de Medios:
+## 4. Configure Media Files:
 
-- Para poder guardar y mostrar las imágenes de los códigos QR generados,
-  configuramos Django para servir archivos multimedia.
+- To be able to save and display the generated QR code images, configure Django to serve media files.
 
-**En `settings.py` añadimos:**
+**In `settings.py` add:**
 
 ```python
 MEDIA_URL = "files/"
 MEDIA_ROOT = BASE_DIR / "files"
 ```
 
-**En `urls.py` agregamos los siguiente:**
+**In `urls.py` add the following:**
 
 ```bash
   + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 ```
 
-Esto ará que en desarrollo podamos ver las imágenes directamente desde el
-navegador.
+This will allow you to view the images directly from the browser during development.
 
-## 5. Agregar el Campo al Serializer:
+## 5. Add the Field to the Serializer:
 
-- En `serializers.py` usamos nuestro campo especial.
+- In `serializers.py` use our special field.
 
 ```python
 from core.fields import vCardQRCodeField
@@ -216,12 +185,11 @@ class ClienteSerializer(serializers.Serializer):
     codigo_qr = vCardQRCodeField()
 ```
 
-Con esto, cuando llegue la información del cliente, se genera el QR
-automáticamente.
+With this, when the client's information arrives, the QR is generated automatically.
 
-## 6. Levanta el Servidor:
+## 6. Start the Server:
 
-- Ejecutamos:
+- Run:
 
 ```bash
 python manage.py makemigrations
@@ -229,39 +197,32 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-## 7. Probar la API
+## 7. Test the API
 
-- Enviamos un JSON con los datos de un cliente, por ejemplo:
+- Send a JSON with the client's data, for example:
 
-{ "contacto_qr": { "name": "Martha", "phone": "77889966", "email":
-"martha@gmail.com" } }
+{ "contacto_qr": { "name": "Martha", "phone": "77889966", "email": "martha@gmail.com" } }
 
-Al hacer la petición, el sistema generará automáticamente el código QR con esos
-datos. Finalmente abrimos en el navegador el siguiente enlace
-http://127.0.0.1:8000/api/nombre-de-la-api/ y listo, ya tenemos disponible el
-código QR generado con los datos implementados.
+When making the request, the system will automatically generate the QR code with that data. Finally, open the following link in your browser http://127.0.0.1:8000/api/api-name/ and that's it, you now have the QR code generated with the implemented data available.
 
 ## ![imagendeFork](IMAGES/ImagenQr.png)
 
 ---
 
-# **Cómo escribir pruebas unitarias para tu campo personalizado**
+# **How to Write Unit Tests for Your Custom Field**
 
-Este documento describe como ejemplo el test unitario implementado para la clase
-`BaseQRCodeField`, un campo personalizado de **Django REST Framework** que
-genera códigos QR a partir de texto de entrada.
+This document describes as an example the unit test implemented for the `BaseQRCodeField` class, a custom field of **Django REST Framework** that generates QR codes from input text.
 
 ---
 
-## 1. Estructura del Test
+## 1. Test Structure
 
-**Archivo:** `test_qrbase.py`  
-El test está organizado en una estructura simple y directa que cubre los casos
-esenciales de uso de la clase `BaseQRCodeField`.
+**File:** `test_qrbase.py`  
+The test is organized in a simple and direct structure that covers the essential use cases of the `BaseQRCodeField` class.
 
 ---
 
-## 2. Dependencias
+## 2. Dependencies
 
 ```python
 import pytest
@@ -270,41 +231,40 @@ from django.core.exceptions import ValidationError
 from drf_extra_fields.fields import BaseQRCodeField
 ```
 
-Dependencias Externas Requeridas:
+Required External Dependencies:
 
-pytest: Framework de testing
+pytest: Testing framework
 
-Django: Para ValidationError y SimpleUploadedFile
+Django: For ValidationError and SimpleUploadedFile
 
-djangorestframework: Framework base
+djangorestframework: Base framework
 
-qrcode: Librería para generar códigos QR
+qrcode: Library to generate QR codes
 
-pillow: Procesamiento de imágenes
+pillow: Image processing
 
-## 3. **Componentes del Test** Fixture: qr_field
+## 3. **Test Components** Fixture: qr_field
 
 ```python
 @pytest.fixture
 def qr_field():
-    """Fixture para instanciar la clase BaseQRCodeField."""
+    """Fixture to instantiate the BaseQRCodeField class."""
     return BaseQRCodeField()
 ```
 
-Propósito: Proporciona una instancia reutilizable de BaseQRCodeField para todos
-los tests. Beneficios:
+Purpose: Provides a reusable instance of BaseQRCodeField for all tests. Benefits:
 
-Evita duplicación de código
+Avoids code duplication
 
-Garantiza instancia limpia en cada test
+Ensures a clean instance in each test
 
-Simplifica la escritura de tests
+Simplifies writing tests
 
-## 4. Test de Caso Exitoso: test_qrcode_field_valid
+## 4. Successful Case Test: test_qrcode_field_valid
 
 ```python
 def test_qrcode_field_valid(qr_field):
-    """Caso exitoso: debe generar un archivo PNG válido cuando se le pasa un string."""
+    """Successful case: should generate a valid PNG file when given a string."""
     text = "Hola Gerardo"
     file = qr_field.to_internal_value(text)
 
@@ -315,7 +275,7 @@ def test_qrcode_field_valid(qr_field):
     assert file.size > 0
 ```
 
-## 5. test de Validación de Tipo: test_qrcode_field_invalid_type
+## 5. Type Validation Test: test_qrcode_field_invalid_type
 
 ```python
 def test_qrcode_field_invalid_type(qr_field):
@@ -325,12 +285,11 @@ def test_qrcode_field_invalid_type(qr_field):
     assert str(exc_info.value) == "['Expected text to generate QR code']"
 ```
 
-Objetivo: Rechazar entradas que no sean strings.
+Objective: Reject inputs that are not strings.
 
-Objetivo: Verificar que el campo genere correctamente un código QR válido a
-partir de texto.
+Objective: Verify that the field correctly generates a valid QR code from text.
 
-## 6. Test de String Vacío: test_qrcode_field_empty_string
+## 6. Empty String Test: test_qrcode_field_empty_string
 
 ```python
 def test_qrcode_field_empty_string(qr_field):
@@ -340,35 +299,35 @@ def test_qrcode_field_empty_string(qr_field):
     assert str(exc_info.value) == "['Cannot generate QR code from empty text']"
 ```
 
-Objetivo: Rechazar strings vacíos.
+Objective: Reject empty strings.
 
-## 7. Ejecución de Tests
+## 7. Running Tests
 
-Ejecutar todos los tests
+Run all tests
 
 ```bash
 pytest test_qrbase.py -v
 ```
 
-Ejecutar test específico
+Run a specific test
 
 ```bash
 pytest test_qrbase.py::test_qrcode_field_valid -v
 ```
 
-Con output detallado
+With detailed output
 
 ```bash
 pytest test_qrbase.py -v -s
 ```
 
-Con información de coverage
+With coverage information
 
 ```bash
 pytest test_qrbase.py --cov=drf_extra_fields.fields
 ```
 
-Salida Esperada:
+Expected Output:
 
 ```bash
 test_qrbase.py::test_qrcode_field_valid PASSED [33%]
@@ -378,17 +337,15 @@ test_qrbase.py::test_qrcode_field_empty_string PASSED [100%]
 
 ```
 
-Test Pasando
+Passing Test
 
 <img width="1487" height="294" alt="captura_baseqr" src="https://github.com/user-attachments/assets/dc584050-ac6f-401a-adfe-05ed4d549d99" />
 
-En el archivo tests/test_qrbase.py deben de crear sus nuevas clases siguiendo el
-patrón de la clase Base64ImageSerializerTests. La imagen de **test Pasando** es
-como deberian de lucir sus pruebas.
+In the file tests/test_qrbase.py you should create your new classes following the pattern of the Base64ImageSerializerTests class. The **Passing Test** image is how your tests should look.
 
-## 8. **Ejecutar pruebas con tox** Para automatizar las pruebas y asegurar la calidad
+## 8. **Run tests with tox** To automate tests and ensure code quality
 
-del código, debes usar los siguientes comandos:
+you should use the following commands:
 
 ```bash
 pip install tox
@@ -400,19 +357,17 @@ tox
 
 ---
 
-# **Cómo enviar tus cambios para solicitar la unión**
+# **How to Submit Your Changes for Review**
 
-1. Ve a: https://github.com/Hipo/drf-extra-fields/pulls
-2. Haz clic en **"New Pull Request"**
-3. Configura así:
-   - base: `master` repositorio `Hipo/drf-extra-fields`
-   - compare: `tu-rama` repositorio `tu-usuario/drf-extra-fields`
-4. Revisa los cambios y asegúrate que todo esté correcto.
-5. Añade un título descriptivo y una descripción detallada de tus cambios,
-   indicando qué problema resuelven o qué funcionalidad añaden.
-6. Haz clic en **"Create pull request"** para enviar tu contribución a revisión.
+1. Go to: https://github.com/Hipo/drf-extra-fields/pulls
+2. Click on **"New Pull Request"**
+3. Set up as follows:
+   - base: `master` repository `Hipo/drf-extra-fields`
+   - compare: `your-branch` repository `your-username/drf-extra-fields`
+4. Review the changes and make sure everything is correct.
+5. Add a descriptive title and a detailed description of your changes, indicating what problem they solve or what functionality they add.
+6. Click **"Create pull request"** to submit your contribution for review.
 
-## Notas
+## Notes
 
-- Describe claramente los cambios en tu Pull Request, un titulo claro y una
-  descripción breve.
+- Clearly describe the changes in your Pull Request, with a clear title and a brief
