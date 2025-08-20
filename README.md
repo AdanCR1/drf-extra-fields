@@ -482,6 +482,127 @@ class EmailSerializer(serializers.Serializer):
 
 ```
 
+## QRCodeField
+
+A field for generating QR codes from text input. Receives a string from the client and converts it to a PNG QR code image.
+
+**Signature:** `BaseQRCodeField()`
+
+- Accepts a string as input and returns a PNG image file.
+- Raises a validation error if the input is empty or not a string.
+- Requires the `qrcode` library (`pip install qrcode`).
+
+**Example:**
+
+```python
+from drf_extra_fields.fields import BaseQRCodeField
+from rest_framework import serializers
+
+class QRSerializer(serializers.Serializer):
+    qr = BaseQRCodeField()
+
+serializer = QRSerializer(data={'qr': 'Hello world'})
+serializer.is_valid()  # True
+qr_file = serializer.validated_data['qr']  # Generated PNG file
+```
+
+## UrlQRCodeField
+
+A specialized field that generates a QR code only for URLs. Validates that the URL begins with `http://` or `https://` before generating the QR code.
+
+**Signature:** `UrlQRCodeField()`
+
+- Only accepts strings that are valid URLs.
+- Raises a validation error if the URL does not start with `http://` or `https://`.
+
+**Example:**
+
+```python
+from drf_extra_fields.fields import UrlQRCodeField
+from rest_framework import serializers
+
+class UrlQRSerializer(serializers.Serializer):
+    qr = UrlQRCodeField()
+
+serializer = UrlQRSerializer(data={'qr': 'https://www.example.com'})
+serializer.is_valid()  # True
+qr_file = serializer.validated_data['qr']
+```
+
+## WiFiQRCodeField
+
+Generates a QR code for WiFi credentials from a dictionary.
+
+**Signature:** `WiFiQRCodeField()`
+
+- Expected input:
+  ```python
+  {
+      "ssid": str,
+      "password": str,          # optional if security == "nopass"
+      "security": "WPA"|"WEP"|"nopass",
+      "hidden": bool            # optional, defaults to False
+  }
+  ```
+- Validates that required fields are present and of the correct type.
+- Escapes special characters according to the WiFi QR specification.
+
+**Example:**
+
+```python
+from drf_extra_fields.fields import WiFiQRCodeField
+from rest_framework import serializers
+
+class WiFiQRSerializer(serializers.Serializer):
+    qr = WiFiQRCodeField()
+
+serializer = WiFiQRSerializer(data={
+    'qr': {
+        'ssid': 'MyNetwork',
+        'password': 'secret',
+        'security': 'WPA',
+        'hidden': False
+    }
+})
+serializer.is_valid()  # True
+qr_file = serializer.validated_data['qr']
+```
+
+## vCardQRCodeField
+
+Generates a QR code with contact information in vCard format. Validates name, phone number, and email.
+
+**Signature:** `vCardQRCodeField()`
+
+- Expected input:
+  ```python
+  {
+      "name": str,
+      "phone": str,
+      "email": str
+  }
+  ```
+- All fields are required. Raises a validation error if any are missing.
+
+**Example:**
+
+```python
+from drf_extra_fields.fields import vCardQRCodeField
+from rest_framework import serializers
+
+class vCardQRSerializer(serializers.Serializer):
+    qr = vCardQRCodeField()
+
+serializer = vCardQRSerializer(data={
+    'qr': {
+        'name': 'John Doe',
+        'phone': '+1-555-1234',
+        'email': 'john@example.com'
+    }
+})
+serializer.is_valid()  # True
+qr_file =
+
 # CONTRIBUTION
 
 Look at the [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) file for contribution
