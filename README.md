@@ -602,6 +602,7 @@ serializer = vCardQRSerializer(data={
 })
 serializer.is_valid()  # True
 qr_file =
+```
 
 # CONTRIBUTION
 
